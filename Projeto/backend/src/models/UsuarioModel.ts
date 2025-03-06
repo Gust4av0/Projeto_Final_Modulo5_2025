@@ -1,10 +1,17 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';  // Importando a conexão com o banco
 
-class UserModel extends Model {}
+class UsuarioModel extends Model {
+  id: number | undefined;
+  nome: string | undefined;
+  email: string | undefined;
+  senha: string | undefined;
+  tipo: 'admin' | 'cliente' | undefined;
+  cpf: string | undefined;
+}
 
 // Definindo o modelo de usuário
-UserModel.init(
+UsuarioModel.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -36,10 +43,10 @@ UserModel.init(
   },
   {
     sequelize,  // Passando a instância do sequelize
-    modelName: 'UserModel',  // Nome do modelo
-    tableName: 'users',  // Nome da tabela no banco de dados
+    modelName: 'UsuarioModel',  // Nome do modelo
+    tableName: 'usuarios',  // Nome da tabela no banco de dados
     timestamps: false
   }
 );
 
-export default UserModel;
+export default UsuarioModel;
