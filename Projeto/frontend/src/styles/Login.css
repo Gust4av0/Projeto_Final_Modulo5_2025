@@ -1,0 +1,90 @@
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url("/background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.login-box {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  width: 350px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: yellow;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: yellow;
+  color: black;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #ffcc00;
+}
+
+.forgot-password {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  color: white; /* Mantém o link visível */
+  text-decoration: none; /* Remove o sublinhado */
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.forgot-password:hover {
+  color: yellow; /* Destaca ao passar o mouse */
+}
+
+.signup-link {
+  display: block;
+  margin-top: 15px;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.signup-link:hover {
+  color: yellow;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
