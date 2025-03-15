@@ -27,6 +27,8 @@ function Login() {
 
   return (
     <div className="login-container">
+      <title>Login - Aluga Aí Zé</title>
+      <link rel="icon" type="image/png" href="../images/favicon.jpg"></link>
       <div className="login-box">
         <h1>Login</h1>
         {error && <p className="error-message">{error}</p>}

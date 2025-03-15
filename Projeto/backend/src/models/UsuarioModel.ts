@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';  // Importando a conexão com o banco
+import bcrypt from 'bcrypt'
 
 class UsuarioModel extends Model {
   id: number | undefined;
@@ -8,6 +9,16 @@ class UsuarioModel extends Model {
   senha: string | undefined;
   tipo: 'admin' | 'cliente' | undefined;
   cpf: string | undefined;
+
+  //função para Criptografar a senha
+  public async hashSenha() {
+    this.senha = await bcrypt.hash(this.senha!, 10)
+  }
+
+  //função para validar a senha, se é diferente
+  public async validaSenha(senha: string): Promise<boolean>{
+    return await bcrypt.compare(senha, this.senha!)
+  }
 }
 
 // Definindo o modelo de usuário
@@ -48,5 +59,17 @@ UsuarioModel.init(
     timestamps: false
   }
 );
+
+//Após criar um usuário, chamar a função para criptrografar 
+UsuarioModel.beforeCreate(async (usuario: UsuarioModel) => {
+  await usuario.hashSenha()
+})
+
+//Após atualizar um usuário, chamar a função para criptrografar 
+UsuarioModel.beforeUpdate(async (usuario: UsuarioModel) => {
+  if(usuario.changed('senha')){
+    await usuario.hashSenha()
+  }
+})
 
 export default UsuarioModel;

@@ -1,9 +1,15 @@
+* {
+  margin: 0;
+  padding: 0;
+
+}
+
 .login-container {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-image: url("/background.jpg");
+  background-image: url("../images/background.jpg");
   background-size: cover;
   background-position: center;
 }
@@ -59,14 +65,17 @@ input {
   display: block;
   margin-top: 10px;
   text-align: center;
-  color: white; /* Mantém o link visível */
-  text-decoration: none; /* Remove o sublinhado */
+  color: white;
+  /* Mantém o link visível */
+  text-decoration: none;
+  /* Remove o sublinhado */
   font-size: 14px;
   transition: color 0.3s;
 }
 
 .forgot-password:hover {
-  color: yellow; /* Destaca ao passar o mouse */
+  color: yellow;
+  /* Destaca ao passar o mouse */
 }
 
 .signup-link {

@@ -21,7 +21,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
     try {
         const { nome, email, senha, cpf } = req.body
 
-        if(!nome || nome === ''){
+        if(!nome || !email || !senha || !cpf){
             return res.status(400)
             .json({error: 'Propiedade não pode ser vazio'})
         }

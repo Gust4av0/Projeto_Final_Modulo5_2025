@@ -1,11 +1,13 @@
 import express from "express";
+import cors from "cors";
 import sequelize from "../src/config/database";
 import usuarioRota from "./routes/usuarioRota";
 import categoriaRota from "./routes/categoriaRota";
 import locadoraRota from "./routes/locadorasRota";
-
+import loginRota from "./routes/loginRoutes";
 
 const app = express();
+app.use(cors());
 const port = 3000;
 
 app.use(express.json());
@@ -18,6 +20,9 @@ app.use(categoriaRota)
 
 //rota para o crud de locadoras
 app.use(locadoraRota)
+
+//rota para a validação de login
+app.use(loginRota);
 
 //rota de teste
 app.get("/", (req, res) => {
