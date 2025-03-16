@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Login.css"; // Verifique se esse caminho está correto
 
-function Login() {
+// Definição do tipo para o usuário
+type UserType = {
+  nome: string;
+  email: string;
+};
+
+function Login({ setUser }: { setUser: (user: UserType) => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,17 +18,11 @@ function Login() {
     e.preventDefault();
     setError("");
 
-    // VALIDAÇÕES (comentadas temporariamente)
-    // if (!email || !password) {
-    //   setError("Preencha todos os campos!");
-    //   return;
-    // }
-    // if (!email.includes("@")) {
-    //   setError("E-mail inválido!");
-    //   return;
-    // }
+    // Simulando um usuário autenticado
+    const usuario: UserType = { nome: "Carlos", email };
 
-    navigate("/dashboard");
+    setUser(usuario); // Define o usuário autenticado
+    navigate("/home");
   };
 
   return (

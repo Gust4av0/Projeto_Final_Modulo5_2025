@@ -1,55 +1,65 @@
 import { NavLink } from "react-router-dom";
+import { FiHome, FiUsers, FiKey, FiLayers } from "react-icons/fi"; // FiLayers para Categorias
+import perfilImg from "../images/perfil.jpg";
 import "../styles/Sidebar.css";
-import perfilImg from "../images/perfil.jpg"; // Coloque sua imagem de perfil aqui
+import { FaCarRear } from "react-icons/fa6";
+import { IoMenu } from "react-icons/io5";
 
-function Sidebar() {
+interface SidebarProps {
+  isMinimized: boolean;
+  setIsMinimized: (value: boolean) => void;
+  user: { nome: string };
+}
+
+function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
   return (
-    <div className="sidebar">
-      <div className="perfil-section">
-        <img src={perfilImg} alt="Perfil" className="perfil-img" />
-        <NavLink to="/perfil" className="perfil-link">
-          Meu Perfil
-        </NavLink>
-      </div>
+    <div className={`sidebar ${isMinimized ? "minimized" : ""}`}>
+      <button
+        className="menu-toggle"
+        onClick={() => setIsMinimized(!isMinimized)}
+      >
+        <IoMenu size={32} className="menu-icon" />
+      </button>
 
-      <nav className="menu">
-        <h3>Dashboard</h3>
-        <NavLink to="/dashboard" className="menu-link">
-          Página inicial
-        </NavLink>
+      {!isMinimized && (
+        <div className="user-profile">
+          <img src={perfilImg} alt="Perfil" className="profile-img" />
+          <p>{user?.nome}</p>
+        </div>
+      )}
 
-        <h3>Veículos</h3>
-        <NavLink to="/veiculos/listar" className="menu-link">
-          Listar Veículos
-        </NavLink>
-        <NavLink to="/veiculos/adicionar" className="menu-link">
-          Adicionar Veículo
-        </NavLink>
-
-        <h3>Clientes</h3>
-        <NavLink to="/clientes/listar" className="menu-link">
-          Listar Clientes
-        </NavLink>
-        <NavLink to="/clientes/adicionar" className="menu-link">
-          Adicionar Cliente
-        </NavLink>
-
-        <h3>Locações</h3>
-        <NavLink to="/locacoes/listar" className="menu-link">
-          Listar Locações
-        </NavLink>
-        <NavLink to="/locacoes/nova" className="menu-link">
-          Nova Locação
-        </NavLink>
-
-        <h3>Relatórios</h3>
-        <NavLink to="/relatorios/locacoes" className="menu-link">
-          Relatório de Locações
-        </NavLink>
-        <NavLink to="/relatorios/receitas" className="menu-link">
-          Relatório de Receitas
-        </NavLink>
-      </nav>
+      <ul>
+        <li>
+          <NavLink to="/home">
+            <FiHome size={24} />
+            {!isMinimized && <span>Home</span>}
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/usuarios">
+            <FiUsers size={24} />
+            {!isMinimized && <span>Usuários</span>}
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/locadoras">
+            <FiKey size={24} />
+            {!isMinimized && <span>Locadoras</span>}
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/veiculos">
+            <FaCarRear size={24} />
+            {!isMinimized && <span>Veículos</span>}
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/categorias">
+            <FiLayers size={24} />
+            {!isMinimized && <span>Categorias</span>}
+          </NavLink>
+        </li>
+      </ul>
     </div>
   );
 }

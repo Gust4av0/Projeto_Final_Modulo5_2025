@@ -1,48 +1,73 @@
 .sidebar {
-  width: 250px;
-  background-color: #4b3cbf;
+  width: 200px;
+  background-color: #1e1e2f;
+  color: white;
   height: 100vh;
-  color: #fff;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease-in-out;
 }
 
-.perfil-section {
+.sidebar.minimized {
+  width: 60px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.sidebar ul li a:hover {
+  background-color: #2b2b40;
+}
+
+/* Botão de abrir/fechar menu */
+.menu-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 15px;
+  width: 100%;
+  text-align: left;
+}
+
+.menu-icon {
+  color: white; /* Mantém a mesma cor dos outros ícones */
+}
+.menu-icon:hover {
+  background-color: #2b2b40;
+}
+
+/* Perfil do usuário */
+.user-profile {
   text-align: center;
-  margin-bottom: 30px;
+  margin: 15px 0;
 }
 
-.perfil-img {
-  width: 100px;
-  height: 100px;
+.profile-img {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
-.perfil-link {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.menu h3 {
-  margin-top: 20px;
-  font-size: 16px;
-  border-bottom: 1px solid #6e60d8;
-  padding-bottom: 5px;
-}
-
-.menu-link {
-  display: block;
-  text-decoration: none;
-  color: #fff;
-  padding: 8px 0;
-  transition: color 0.3s;
-}
-
-.menu-link:hover,
-.menu-link.active {
-  color: #97f1ff;
+/* Oculta o nome quando minimizado */
+.sidebar.minimized .user-profile p {
+  display: none;
 }
