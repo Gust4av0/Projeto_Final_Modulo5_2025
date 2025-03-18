@@ -48,8 +48,10 @@
 }
 
 .menu-icon {
-  color: white; /* Mantém a mesma cor dos outros ícones */
+  color: white;
+  /* Mantém a mesma cor dos outros ícones */
 }
+
 .menu-icon:hover {
   background-color: #2b2b40;
 }

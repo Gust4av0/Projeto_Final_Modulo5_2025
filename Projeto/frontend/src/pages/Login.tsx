@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Login.css"; // Verifique se esse caminho está correto
+import api from "../services/api"; 
 
 // Definição do tipo para o usuário
 type UserType = {
@@ -14,15 +15,33 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  //função para validar o usuário no banco e realizar o login
+  const realizarLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    // Simulando um usuário autenticado
-    const usuario: UserType = { nome: "Carlos", email };
-
-    setUser(usuario); // Define o usuário autenticado
-    navigate("/home");
+  
+    try {
+      const response = await api.post("/login", {
+        email: email,
+        senha: password,
+      });
+  
+      // Pegando o token e nome do usuário retornado
+      const { token, nome } = response.data;
+  
+      // Guardando o token no localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("nomeUsuario", nome); // Armazena o nome do usuário
+  
+      // Define o usuário autenticado
+      setUser({ nome, email });
+  
+      // Redireciona para a home
+      navigate("/home");
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Erro ao fazer login!");
+    }
   };
 
   return (
@@ -32,7 +51,7 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
       <div className="login-box">
         <h1>Login</h1>
         {error && <p className="error-message">{error}</p>}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={realizarLogin}>
           <div className="input-group">
             <input
               type="email"

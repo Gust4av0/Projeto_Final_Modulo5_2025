@@ -2,7 +2,8 @@ import { NavLink } from "react-router-dom";
 import { FiHome, FiUsers, FiKey, FiLayers } from "react-icons/fi"; // FiLayers para Categorias
 import perfilImg from "../images/perfil.jpg";
 import "../styles/Sidebar.css";
-import { FaCarRear } from "react-icons/fa6";
+import { FaCarRear  } from "react-icons/fa6";
+import { FaSignOutAlt } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
 
 interface SidebarProps {
@@ -35,6 +36,7 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
             {!isMinimized && <span>Home</span>}
           </NavLink>
         </li>
+        <hr></hr>
         <li>
           <NavLink to="/usuarios">
             <FiUsers size={24} />
@@ -48,17 +50,24 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/categorias">
+            <FiLayers size={24} />
+            {!isMinimized && <span>Categorias</span>}
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/veiculos">
             <FaCarRear size={24} />
             {!isMinimized && <span>Veículos</span>}
           </NavLink>
         </li>
         <li>
-          <NavLink to="/categorias">
-            <FiLayers size={24} />
-            {!isMinimized && <span>Categorias</span>}
+          <NavLink to="">
+          <FaSignOutAlt size={24} />
+            {!isMinimized && <span>Sair</span>}
           </NavLink>
         </li>
+        
       </ul>
     </div>
   );

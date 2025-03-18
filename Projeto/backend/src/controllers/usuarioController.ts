@@ -9,7 +9,7 @@ export const obterUsuarios = async (req: Request, res: Response) => {
   }
 
 //rota para pegar os usuário por ID
-  export const obterUsuarioId = async (req: Request< {id: number}>, res: Response) => {
+  export const obterUsuarioId = async (req: Request< {id: string}>, res: Response) => {
     const usuario = await UsuarioModel.findByPk(req.params.id)
     
     return res.json(usuario);
@@ -34,7 +34,7 @@ export const criarUsuario = async (req: Request, res: Response) => {
 }
 
 //rota para atualizar um usuário
-export const atualizarUsuario = async (req: Request< {id: number}>, res: Response) => {
+export const atualizarUsuario = async (req: Request< {id: string}>, res: Response) => {
 
     try {
         const { nome, email, senha, cpf } = req.body
@@ -64,7 +64,7 @@ export const atualizarUsuario = async (req: Request< {id: number}>, res: Respons
 }
 
 //rota para deletar um usuário
-export const deletarUsuarioId =  async (req: Request <{id: number}>, res: Response) => {
+export const deletarUsuarioId =  async (req: Request <{id: string}>, res: Response) => {
     try{ 
     const usuario = await UsuarioModel.findByPk(req.params.id);
         if(!usuario){

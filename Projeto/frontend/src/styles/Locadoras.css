@@ -94,12 +94,14 @@
   color: white;
   padding: 12px;
   text-align: left;
-  border: 1px solid #444; /* Adiciona separação */
+  border: 1px solid #444;
+  /* Adiciona separação */
 }
 
 .locadoras-tabela td {
   padding: 12px;
-  border: 1px solid #444; /* Adiciona separação */
+  border: 1px solid #444;
+  /* Adiciona separação */
 }
 
 /* BORDAS SEPARANDO TEMAS DA TABELA */

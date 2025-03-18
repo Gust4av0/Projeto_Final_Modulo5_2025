@@ -32,10 +32,10 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/home" />} />
               <Route path="/home" element={<Home user={user} />} />
-              <Route path="/usuarios" element={<Usuarios />} />
               <Route path="/locadoras" element={<Locadoras />} />
-              <Route path="/veiculos" element={<Veiculos />} />
               <Route path="/categorias" element={<Categorias />} />
+              <Route path="/veiculos" element={<Veiculos />} />
+              <Route path="/usuarios" element={<Usuarios />} />
             </Routes>
           </main>
         </div>

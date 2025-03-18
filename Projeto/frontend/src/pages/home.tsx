@@ -1,11 +1,20 @@
-function Home({ user }: { user: { nome: string } }) {
+import { useEffect, useState } from "react";
+
+function Home() {
+  const [nomeUsuario, setNomeUsuario] = useState("");
+
+  useEffect(() => {
+    // Pegando o nome completo do usuário salvo no login
+    const nomeSalvo = localStorage.getItem("nomeUsuario") || "Usuário";
+
+    setNomeUsuario(nomeSalvo);
+  }, []);
+
   return (
-    <div className="home-container">
-      <h1>
-        Olá, <span className="user-name">{user?.nome || "Usuário"}</span>, seja
-        bem-vindo ao sistema de locação!
-      </h1>
-      <p>Escolha uma opção no menu para começar.</p>
+    <div>
+      <h1>Olá, {nomeUsuario}!</h1>
+      <br />
+      <h2>Seja Bem Vindo ao sistema de Locações</h2>
     </div>
   );
 }

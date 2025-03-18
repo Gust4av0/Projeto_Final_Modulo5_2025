@@ -10,6 +10,7 @@ interface Veiculo {
   placa: string;
   precoDiaria: string;
   categoria: string;
+  locadora: string;
 }
 
 const Veiculos = () => {
@@ -18,6 +19,7 @@ const Veiculos = () => {
   const [filtroAno, setFiltroAno] = useState("");
   const [filtroPlaca, setFiltroPlaca] = useState("");
   const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [filtroLocadora, setFiltroLocadora] = useState("");
 
   const veiculos: Veiculo[] = [
     {
@@ -28,49 +30,14 @@ const Veiculos = () => {
       placa: "ABC-1234",
       precoDiaria: "R$ 150,00",
       categoria: "Sedan",
-    },
-    {
-      id: 2,
-      marca: "Honda",
-      modelo: "Civic",
-      ano: "2021",
-      placa: "DEF-5678",
-      precoDiaria: "R$ 140,00",
-      categoria: "Sedan",
-    },
-    {
-      id: 3,
-      marca: "Jeep",
-      modelo: "Renegade",
-      ano: "2023",
-      placa: "GHI-9012",
-      precoDiaria: "R$ 180,00",
-      categoria: "SUV",
-    },
-    {
-      id: 4,
-      marca: "Chevrolet",
-      modelo: "Onix",
-      ano: "2022",
-      placa: "JKL-3456",
-      precoDiaria: "R$ 120,00",
-      categoria: "Hatch",
-    },
-    {
-      id: 5,
-      marca: "Ford",
-      modelo: "Ranger",
-      ano: "2023",
-      placa: "MNO-7890",
-      precoDiaria: "R$ 200,00",
-      categoria: "Caminhonete",
-    },
+      locadora: "Campo Mourão"
+    }
   ];
 
   return (
     <div className="veiculos-container">
       {/* TÍTULO NO CANTO SUPERIOR ESQUERDO */}
-      <h1 className="titulo-filtro">Filtrar Veículos</h1>
+      <h1 className="titulo-filtro">Veículos</h1>
 
       {/* FILTRO COM ESPAÇAMENTO AJUSTADO */}
       <div className="filtros">
@@ -105,9 +72,15 @@ const Veiculos = () => {
             value={filtroCategoria}
             onChange={(e) => setFiltroCategoria(e.target.value)}
           />
+          <input
+            type="text"
+            placeholder="Locadora"
+            value={filtroLocadora}
+            onChange={(e) => setFiltroLocadora(e.target.value)}
+          />
         </div>
         <div className="filtro-botoes">
-          <button className="btn-filtrar">Filtrar</button>
+          <button className="btn-filtrar">Adicionar</button>
           <button className="btn-limpar">Limpar</button>
         </div>
       </div>
@@ -123,6 +96,7 @@ const Veiculos = () => {
               <th>Placa</th>
               <th>Preço Diária</th>
               <th>Categoria</th>
+              <th>Locadora</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -135,15 +109,13 @@ const Veiculos = () => {
                 <td>{veiculo.placa}</td>
                 <td>{veiculo.precoDiaria}</td>
                 <td>{veiculo.categoria}</td>
+                <td>{veiculo.locadora}</td>
                 <td className="acoes">
                   <button className="btn-acao" title="Editar Informações">
                     <FiEdit color="orange" />
                   </button>
-                  <button className="btn-acao" title="Alterar Categoria">
-                    <FiTag color="blue" />
-                  </button>
                   <button className="btn-acao" title="Excluir">
-                    <FiTrash color="gray" />
+                    <FiTrash color="red" />
                   </button>
                 </td>
               </tr>
