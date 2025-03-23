@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+// src/pages/Usuarios.tsx
+import { useState, useEffect, useCallback } from "react";
 import "../styles/Usuarios.css";
-import { FiTrash, FiEdit, FiLock } from "react-icons/fi";
-import { MdBlock } from "react-icons/md";
+import { FiTrash, FiEdit } from "react-icons/fi";
 import api from "../services/api";
+import Modal from "../components/Modal";
 
-interface Usuario {
+export interface Usuario {
   id: number;
   nome: string;
   cpf: string;
@@ -14,133 +15,98 @@ interface Usuario {
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [formData, setFormData] = useState({
+  const [filtros, setFiltros] = useState({
     nome: "",
     cpf: "",
     email: "",
-    senha: "",
-    confirmaSenha: "",
+    telefone: "",
   });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [usuarioEditando, setUsuarioEditando] = useState<Usuario | null>(null);
 
-  // Carregar usuários do banco ao iniciar
-  useEffect(() => {
-    obterUsuarios();
-  }, []);
-
-  const obterUsuarios = async () => {
+  const obterUsuarios = useCallback(async () => {
     try {
-      const response = await api.get("/usuarios");
+      const response = await api.get("/usuarios", { params: filtros });
       setUsuarios(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar usuários:", error);
+    } catch {
       alert("Erro ao carregar usuários!");
     }
+  }, [filtros]);
+
+  useEffect(() => {
+    obterUsuarios();
+  }, [obterUsuarios]);
+
+  const limparFiltros = () => {
+    setFiltros({ nome: "", cpf: "", email: "", telefone: "" });
   };
 
-  // Função para lidar com mudanças nos inputs
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleFiltroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiltros({ ...filtros, [e.target.name]: e.target.value });
   };
 
-  // Função para cadastrar usuário
-  const cadastrarUsuario = async () => {
-    if (formData.senha !== formData.confirmaSenha) {
-      alert("As senhas não coincidem!");
-      return;
-    }
-
-    try {
-      await api.post("/usuarios", {
-        nome: formData.nome,
-        cpf: formData.cpf,
-        email: formData.email,
-        senha: formData.senha,
-      });
-
-      alert("Usuário cadastrado com sucesso!");
-      setFormData({ nome: "", cpf: "", email: "", senha: "", confirmaSenha: "" });
-      obterUsuarios(); // Atualiza a lista de usuários após o cadastro
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
-      alert("Erro ao cadastrar usuário!");
-    }
-  };
-
-  //Função para deletar os usuários
   const deletarUsuario = async (id: number) => {
-    if (!window.confirm("Tem certeza que deseja excluir este usuário?")) {
-      return;
-    }
-  
+    if (!window.confirm("Tem certeza que deseja excluir este usuário?")) return;
+
     try {
       await api.delete(`/usuarios/${id}`);
       alert("Usuário excluído com sucesso!");
-      obterUsuarios(); // Atualiza a lista após a exclusão
-    } catch (error) {
+      obterUsuarios();
+    } catch {
       alert("Erro ao excluir usuário!");
     }
   };
 
-  //Função para chamar os dados dentro do input
-  const [usuarioEditando, setUsuarioEditando] = useState<Usuario | null>(null);
-  const editarUsuario = (usuario: Usuario) => {
-    setUsuarioEditando(usuario);
-    setFormData({
-      nome: usuario.nome,
-      cpf: usuario.cpf,
-      email: usuario.email,
-      senha: "",
-      confirmaSenha: "",
-    });
-  };
-
-  //Função para atualizar um usuário
-  const atualizarUsuario = async () => {
-    if (!usuarioEditando) return;
-  
-    if (formData.senha !== formData.confirmaSenha) {
-      alert("As senhas não coincidem!");
-      return;
-    }
-  
-    try {
-      await api.put(`/usuarios/${usuarioEditando.id}`, {
-        nome: formData.nome,
-        cpf: formData.cpf,
-        email: formData.email,
-        senha: formData.senha,
-      });
-  
-      alert("Usuário atualizado com sucesso!");
-      setUsuarioEditando(null); // Sai do modo de edição
-      setFormData({ nome: "", cpf: "", email: "", senha: "", confirmaSenha: "",});
-      obterUsuarios(); // Atualiza a lista de usuários
-    } catch (error) {
-      alert("Erro ao atualizar usuário!");
-    }
-  };
-  
-  
   return (
     <div className="usuarios-container">
       <h1 className="titulo-filtro">Usuários</h1>
 
-      {/* FILTRO COM FORMULÁRIO */}
       <div className="filtros">
         <div className="filtro-inputs">
-          <input type="text" name="nome" placeholder="Nome" value={formData.nome} onChange={handleChange} />
-          <input type="text" name="cpf" placeholder="CPF" value={formData.cpf} onChange={handleChange} />
-          <input type="email" name="email" placeholder="E-mail" value={formData.email} onChange={handleChange} />
-          <input type="password" name="senha" placeholder="Senha" value={formData.senha} onChange={handleChange} />
-          <input type="password" name="confirmaSenha" placeholder="Confirmar Senha" value={formData.confirmaSenha} onChange={handleChange} />
+          <input
+            name="nome"
+            placeholder="Nome"
+            value={filtros.nome}
+            onChange={handleFiltroChange}
+          />
+          <input
+            name="cpf"
+            placeholder="CPF"
+            value={filtros.cpf}
+            onChange={handleFiltroChange}
+          />
+          <input
+            name="email"
+            placeholder="E-mail"
+            value={filtros.email}
+            onChange={handleFiltroChange}
+          />
+          <input
+            name="telefone"
+            placeholder="Telefone"
+            value={filtros.telefone}
+            onChange={handleFiltroChange}
+          />
         </div>
         <div className="filtro-botoes">
-          <button className="btn-filtrar " onClick={usuarioEditando ? atualizarUsuario: cadastrarUsuario}>Adicionar</button>
-          <button className="btn-limpar" onClick={() => setFormData({ nome: "", cpf: "", email: "", senha: "", confirmaSenha: "" })}>Limpar</button>
+          <button className="btn-filtrar" onClick={obterUsuarios}>
+            Filtrar
+          </button>
+          <button
+            className="btn-adicionar"
+            onClick={() => {
+              setUsuarioEditando(null);
+              setModalOpen(true);
+            }}
+          >
+            Adicionar
+          </button>
+          <button className="btn-limpar" onClick={limparFiltros}>
+            Limpar
+          </button>
         </div>
       </div>
 
-      {/* TABELA COM OS USUÁRIOS */}
       <div className="usuarios-tabela-container">
         <table className="usuarios-tabela">
           <thead>
@@ -148,6 +114,7 @@ const Usuarios = () => {
               <th>Nome</th>
               <th>CPF</th>
               <th>E-mail</th>
+              <th>Telefone</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -157,17 +124,40 @@ const Usuarios = () => {
                 <td>{usuario.nome}</td>
                 <td>{usuario.cpf}</td>
                 <td>{usuario.email}</td>
+                <td>{usuario.telefone}</td>
                 <td className="acoes">
-                <button className="btn-acao" title="Editar informações" onClick={() => editarUsuario(usuario)}>
-                <FiEdit color="orange" />
-                </button>
-                  <button className="btn-acao" title="Excluir usuário" onClick={() => deletarUsuario(usuario.id)}><FiTrash color="red" /></button>
+                  <button
+                    className="btn-acao"
+                    title="Editar"
+                    onClick={() => {
+                      setUsuarioEditando(usuario);
+                      setModalOpen(true);
+                    }}
+                  >
+                    <FiEdit color="orange" />
+                  </button>
+                  <button
+                    className="btn-acao"
+                    title="Excluir"
+                    onClick={() => deletarUsuario(usuario.id)}
+                  >
+                    <FiTrash color="red" />
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {modalOpen && (
+        <Modal
+          isOpen={modalOpen}
+          usuario={usuarioEditando}
+          onClose={() => setModalOpen(false)}
+          atualizarLista={obterUsuarios}
+        />
+      )}
     </div>
   );
 };

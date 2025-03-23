@@ -1,8 +1,11 @@
-import { useState } from "react";
+// src/pages/Veiculos.tsx
+import { useState, useEffect, useCallback } from "react";
 import "../styles/Veiculos.css";
-import { FiTrash, FiEdit, FiTag } from "react-icons/fi";
+import { FiTrash, FiEdit } from "react-icons/fi";
+import api from "../services/api";
+import ModalVeiculo from "../components/ModalVeiculos";
 
-interface Veiculo {
+export interface Veiculo {
   id: number;
   marca: string;
   modelo: string;
@@ -14,78 +17,119 @@ interface Veiculo {
 }
 
 const Veiculos = () => {
-  const [filtroMarca, setFiltroMarca] = useState("");
-  const [filtroModelo, setFiltroModelo] = useState("");
-  const [filtroAno, setFiltroAno] = useState("");
-  const [filtroPlaca, setFiltroPlaca] = useState("");
-  const [filtroCategoria, setFiltroCategoria] = useState("");
-  const [filtroLocadora, setFiltroLocadora] = useState("");
+  const [filtros, setFiltros] = useState({
+    marca: "",
+    modelo: "",
+    ano: "",
+    placa: "",
+    categoria: "",
+    locadora: "",
+  });
+  const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
+  const [veiculoEditando, setVeiculoEditando] = useState<Veiculo | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const veiculos: Veiculo[] = [
-    {
-      id: 1,
-      marca: "Toyota",
-      modelo: "Corolla",
-      ano: "2022",
-      placa: "ABC-1234",
-      precoDiaria: "R$ 150,00",
-      categoria: "Sedan",
-      locadora: "Campo Mourão"
+  const obterVeiculos = useCallback(async () => {
+    try {
+      const response = await api.get("/veiculos", { params: filtros });
+      setVeiculos(response.data);
+    } catch {
+      alert("Erro ao carregar veículos!");
     }
-  ];
+  }, [filtros]);
+
+  useEffect(() => {
+    obterVeiculos();
+  }, [obterVeiculos]);
+
+  const handleFiltroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiltros({ ...filtros, [e.target.name]: e.target.value });
+  };
+
+  const limparFiltros = () => {
+    setFiltros({
+      marca: "",
+      modelo: "",
+      ano: "",
+      placa: "",
+      categoria: "",
+      locadora: "",
+    });
+  };
+
+  const deletarVeiculo = async (id: number) => {
+    if (!window.confirm("Tem certeza que deseja excluir este veículo?")) return;
+    try {
+      await api.delete(`/veiculos/${id}`);
+      alert("Veículo excluído com sucesso!");
+      obterVeiculos();
+    } catch {
+      alert("Erro ao excluir veículo!");
+    }
+  };
 
   return (
     <div className="veiculos-container">
-      {/* TÍTULO NO CANTO SUPERIOR ESQUERDO */}
       <h1 className="titulo-filtro">Veículos</h1>
 
-      {/* FILTRO COM ESPAÇAMENTO AJUSTADO */}
       <div className="filtros">
         <div className="filtro-inputs">
           <input
-            type="text"
+            name="marca"
             placeholder="Marca"
-            value={filtroMarca}
-            onChange={(e) => setFiltroMarca(e.target.value)}
+            value={filtros.marca}
+            onChange={handleFiltroChange}
           />
           <input
-            type="text"
+            name="modelo"
             placeholder="Modelo"
-            value={filtroModelo}
-            onChange={(e) => setFiltroModelo(e.target.value)}
+            value={filtros.modelo}
+            onChange={handleFiltroChange}
           />
           <input
-            type="text"
+            name="ano"
             placeholder="Ano"
-            value={filtroAno}
-            onChange={(e) => setFiltroAno(e.target.value)}
+            value={filtros.ano}
+            onChange={handleFiltroChange}
           />
           <input
-            type="text"
+            name="placa"
             placeholder="Placa"
-            value={filtroPlaca}
-            onChange={(e) => setFiltroPlaca(e.target.value)}
+            value={filtros.placa}
+            onChange={handleFiltroChange}
           />
           <input
-            type="text"
+            name="categoria"
             placeholder="Categoria"
-            value={filtroCategoria}
-            onChange={(e) => setFiltroCategoria(e.target.value)}
+            value={filtros.categoria}
+            onChange={handleFiltroChange}
           />
           <input
-            type="text"
+            name="locadora"
             placeholder="Locadora"
-            value={filtroLocadora}
-            onChange={(e) => setFiltroLocadora(e.target.value)}
+            value={filtros.locadora}
+            onChange={handleFiltroChange}
           />
         </div>
         <div className="filtro-botoes">
-          <button className="btn-filtrar">Adicionar</button>
-          <button className="btn-limpar">Limpar</button>
+          <button className="btn-filtrar" onClick={obterVeiculos}>
+            Filtrar
+          </button>
+          <button
+            className="btn-adicionar"
+            onClick={() => {
+              setVeiculoEditando(null);
+              setModalOpen(true);
+            }}
+          >
+            Adicionar
+          </button>
+          <button className="btn-limpar" onClick={limparFiltros}>
+            Limpar
+          </button>
         </div>
       </div>
 
-      {/* TABELA COM O MESMO DESIGN DO FILTRO */}
       <div className="veiculos-tabela-container">
         <table className="veiculos-tabela">
           <thead>
@@ -111,10 +155,21 @@ const Veiculos = () => {
                 <td>{veiculo.categoria}</td>
                 <td>{veiculo.locadora}</td>
                 <td className="acoes">
-                  <button className="btn-acao" title="Editar Informações">
+                  <button
+                    className="btn-acao"
+                    title="Editar"
+                    onClick={() => {
+                      setVeiculoEditando(veiculo);
+                      setModalOpen(true);
+                    }}
+                  >
                     <FiEdit color="orange" />
                   </button>
-                  <button className="btn-acao" title="Excluir">
+                  <button
+                    className="btn-acao"
+                    title="Excluir"
+                    onClick={() => deletarVeiculo(veiculo.id)}
+                  >
                     <FiTrash color="red" />
                   </button>
                 </td>
@@ -123,6 +178,15 @@ const Veiculos = () => {
           </tbody>
         </table>
       </div>
+
+      {modalOpen && (
+        <ModalVeiculo
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          atualizarLista={obterVeiculos}
+          veiculo={veiculoEditando}
+        />
+      )}
     </div>
   );
 };

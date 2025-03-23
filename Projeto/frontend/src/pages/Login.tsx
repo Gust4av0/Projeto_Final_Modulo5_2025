@@ -1,46 +1,43 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "../styles/Login.css"; // Verifique se esse caminho está correto
-import api from "../services/api"; 
+import "../styles/Login.css";
+import api from "../services/api";
+import { AxiosError } from "axios";
 
-// Definição do tipo para o usuário
 type UserType = {
   nome: string;
   email: string;
 };
 
 function Login({ setUser }: { setUser: (user: UserType) => void }) {
-  const [email, setEmail] = useState("");
+  const [emailOuCpf, setEmailOuCpf] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-
-  //função para validar o usuário no banco e realizar o login
   const realizarLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-  
+
     try {
-      const response = await api.post("/login", {
-        email: email,
-        senha: password,
-      });
-  
-      // Pegando o token e nome do usuário retornado
+      const isCpf = /^\d{11}$/.test(emailOuCpf.replace(/\D/g, ""));
+
+      const payload = isCpf
+        ? { cpf: emailOuCpf, senha: password }
+        : { email: emailOuCpf, senha: password };
+
+      const response = await api.post("/login", payload);
+
       const { token, nome } = response.data;
-  
-      // Guardando o token no localStorage
+
       localStorage.setItem("token", token);
-      localStorage.setItem("nomeUsuario", nome); // Armazena o nome do usuário
-  
-      // Define o usuário autenticado
-      setUser({ nome, email });
-  
-      // Redireciona para a home
+      localStorage.setItem("nomeUsuario", nome);
+
+      setUser({ nome, email: emailOuCpf });
       navigate("/home");
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Erro ao fazer login!");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ error: string }>;
+      setError(error.response?.data?.error || "Erro ao fazer login!");
     }
   };
 
@@ -54,10 +51,11 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
         <form onSubmit={realizarLogin}>
           <div className="input-group">
             <input
-              type="email"
-              placeholder="E-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="E-mail ou CPF"
+              value={emailOuCpf}
+              onChange={(e) => setEmailOuCpf(e.target.value)}
+              className="input-grande"
             />
           </div>
           <div className="input-group">
@@ -66,9 +64,10 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
               placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="input-grande"
             />
           </div>
-          <button type="submit" className="login-button">
+          <button type="submit" className="login-button pequeno">
             Entrar
           </button>
         </form>

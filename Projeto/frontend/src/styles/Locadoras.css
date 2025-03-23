@@ -43,7 +43,7 @@
   color: white;
 }
 
-/* ESPAÇAMENTO ENTRE TELEFONE E BOTÕES */
+/* Espaçamento entre último input e botões */
 .filtro-inputs input:last-child {
   margin-right: 20px;
 }
@@ -53,6 +53,17 @@
   gap: 10px;
 }
 
+/* Botão FILTRAR com cor roxa */
+.btn-buscar {
+  background: #6f42c1;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Botão ADICIONAR com cor azul */
 .btn-filtrar {
   background: #007bff;
   color: white;
@@ -62,6 +73,7 @@
   cursor: pointer;
 }
 
+/* Botão LIMPAR com cor laranja */
 .btn-limpar {
   background: #ff8c00;
   color: white;
@@ -71,18 +83,15 @@
   cursor: pointer;
 }
 
-/* ============================
-   ESTILIZANDO A TABELA
-   ============================ */
+/* ============================ TABELA ============================ */
 .locadoras-tabela-container {
-  margin-top: 15px;
+  margin-top: 20px;
   background: #222;
   padding: 12px;
   border-radius: 15px;
   border: 1px solid #666;
 }
 
-/* ADICIONANDO BORDA ENTRE OS TEMAS DA TABELA */
 .locadoras-tabela {
   width: 100%;
   border-collapse: separate;
@@ -95,16 +104,13 @@
   padding: 12px;
   text-align: left;
   border: 1px solid #444;
-  /* Adiciona separação */
 }
 
 .locadoras-tabela td {
   padding: 12px;
   border: 1px solid #444;
-  /* Adiciona separação */
 }
 
-/* BORDAS SEPARANDO TEMAS DA TABELA */
 .locadoras-tabela tr:nth-child(even) {
   background: #2c2c2c;
 }
@@ -113,7 +119,6 @@
   background: #333;
 }
 
-/* BORDAS MAIS DESTACADAS NAS SEÇÕES */
 .locadoras-tabela thead {
   border-bottom: 2px solid #fff;
 }
@@ -122,7 +127,7 @@
   border-bottom: 1px solid #555;
 }
 
-/* BOTÕES DE AÇÃO BRANCOS COM ÍCONES COLORIDOS */
+/* BOTÕES DE AÇÃO */
 .acoes {
   display: flex;
   gap: 5px;
@@ -139,9 +144,4 @@
 
 .btn-acao:hover {
   background: rgba(255, 255, 255, 0.7);
-}
-
-/* ADICIONANDO ESPAÇO EXTRA ENTRE TABELA E FILTRO */
-.locadoras-tabela-container {
-  margin-top: 20px;
 }

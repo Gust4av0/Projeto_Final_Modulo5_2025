@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/ForgotPassword.css"; // Certifique-se de que o caminho está correto
+import { useNavigate, Link } from "react-router-dom";
+import "../styles/ForgotPassword.css";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -25,7 +25,6 @@ function ForgotPassword() {
       return;
     }
 
-    // Simulação de envio de e-mail
     setMessage("E-mail enviado! Redirecionando para o login...");
     setIsCounting(true);
   };
@@ -38,13 +37,16 @@ function ForgotPassword() {
         {message && <p className="success-message">{message}</p>}
         <form onSubmit={handleSubmit}>
           <input
+            className="input-medio"
             type="email"
             placeholder="Digite seu e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button type="submit">Enviar</button>
+          <button type="submit" className="redefinir-button pequeno">
+            Enviar
+          </button>
         </form>
 
         {isCounting && (
@@ -58,6 +60,10 @@ function ForgotPassword() {
             </div>
           </div>
         )}
+
+        <Link to="/" className="login-link">
+          Voltar para o login
+        </Link>
       </div>
     </div>
   );

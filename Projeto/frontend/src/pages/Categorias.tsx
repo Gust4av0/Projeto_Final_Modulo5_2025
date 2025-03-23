@@ -1,115 +1,88 @@
-import { useState, useEffect } from "react";
+// src/pages/Categorias.tsx
+import { useState, useEffect, useCallback } from "react";
 import "../styles/Categorias.css";
 import { FiTrash, FiEdit } from "react-icons/fi";
 import api from "../services/api";
+import ModalCategoria from "../components/ModalCategorias";
 
-interface Categoria {
+export interface Categoria {
   id: number;
   nome: string;
 }
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [formData, setFormData] = useState({
-    nome: "",
-  });
+  const [filtroNome, setFiltroNome] = useState("");
+  const [categoriaEditando, setCategoriaEditando] = useState<Categoria | null>(
+    null
+  );
+  const [modalOpen, setModalOpen] = useState(false);
 
-    // Função para lidar com mudanças nos inputs
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    // Carregar usuários do banco ao iniciar
-      useEffect(() => {
-        obterCategorias();
-      }, []);
-
-  //função para obter as locadoras
-  const obterCategorias = async () => {
+  const obterCategorias = useCallback(async () => {
     try {
-      const response = await api.get("/categorias");
+      const response = await api.get("/categorias", {
+        params: { nome: filtroNome },
+      });
       setCategorias(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar Categorias:", error);
+    } catch {
       alert("Erro ao carregar categorias!");
     }
-  };
+  }, [filtroNome]);
 
-    // Função para cadastrar categorias
-    const cadastrarCategoria = async () => {
-      try {
-        await api.post("/categorias", {
-          nome: formData.nome,
-        });
-  
-        alert("Categoria cadastrada com sucesso!");
-        setFormData({ nome: "",});
-        obterCategorias(); // Atualiza a lista de usuários após o cadastro
-      } catch (error) {
-        console.error("Erro ao cadastrar Categoria:", error);
-        alert("Erro ao cadastrar categoria!");
-      }
-    };
+  useEffect(() => {
+    obterCategorias();
+  }, [obterCategorias]);
 
-    //Função para deletar os categorias
-  const deletarCategorias = async (id: number) => {
-    if (!window.confirm("Tem certeza que deseja excluir esta categoria?")) {
+  const deletarCategoria = async (id: number) => {
+    if (!window.confirm("Tem certeza que deseja excluir esta categoria?"))
       return;
-    }
-  
+
     try {
       await api.delete(`/categorias/${id}`);
-      alert("Categorias excluída com sucesso!");
-      obterCategorias(); // Atualiza a lista após a exclusão
-    } catch (error) {
+      alert("Categoria excluída com sucesso!");
+      obterCategorias();
+    } catch {
       alert("Erro ao excluir categoria!");
     }
   };
 
-  //Função para chamar os dados dentro do input
-  const [categoriaEditando, setCategoriaEditando] = useState<Categoria | null>(null);
-  const editarCategoria = (categoria: Categoria) => {
-    setCategoriaEditando(categoria);
-    setFormData({
-      nome: categoria.nome
-    });
-  };
-
-  //Função para atualizar uma locadora
-  const atualizarCategoria = async () => {
-    if (!categoriaEditando) return;
-  
-    try {
-      await api.put(`/categorias/${categoriaEditando.id}`, {
-        nome: formData.nome,
-      });
-  
-      alert("Categoria atualizada com sucesso!");
-      setCategoriaEditando(null); // Sai do modo de edição
-      setFormData({ nome: "",});
-      obterCategorias(); // Atualiza a lista de usuários
-    } catch (error) {
-      alert("Erro ao atualizar categoria!");
-    }
+  const limparFiltros = () => {
+    setFiltroNome("");
   };
 
   return (
     <div className="categorias-container">
-      {/* TÍTULO NO CANTO SUPERIOR ESQUERDO */}
       <h1 className="titulo-filtro">Categorias</h1>
 
-      {/* FILTRO COM BOTÕES */}
       <div className="filtros">
         <div className="filtro-inputs">
-        <input type="text" name="nome" placeholder="Nome" value={formData.nome} onChange={handleChange} />
+          <input
+            type="text"
+            name="filtroNome"
+            placeholder="Filtrar Nome"
+            value={filtroNome}
+            onChange={(e) => setFiltroNome(e.target.value)}
+          />
         </div>
         <div className="filtro-botoes">
-          <button className="btn-adicionar" onClick={categoriaEditando ? atualizarCategoria: cadastrarCategoria}>Adicionar</button>
-          <button className="btn-limpar" onClick={() => setFormData({nome: ""})}>Limpar</button>
+          <button className="btn-filtrar" onClick={obterCategorias}>
+            Filtrar
+          </button>
+          <button
+            className="btn-adicionar"
+            onClick={() => {
+              setCategoriaEditando(null);
+              setModalOpen(true);
+            }}
+          >
+            Adicionar
+          </button>
+          <button className="btn-limpar" onClick={limparFiltros}>
+            Limpar
+          </button>
         </div>
       </div>
 
-      {/* TABELA DE CATEGORIAS */}
       <div className="categorias-tabela-container">
         <table className="categorias-tabela">
           <thead>
@@ -123,10 +96,21 @@ const Categorias = () => {
               <tr key={categoria.id}>
                 <td>{categoria.nome}</td>
                 <td className="acoes">
-                  <button className="btn-acao" title="Editar Informações" onClick={() => editarCategoria(categoria)}>
+                  <button
+                    className="btn-acao"
+                    title="Editar"
+                    onClick={() => {
+                      setCategoriaEditando(categoria);
+                      setModalOpen(true);
+                    }}
+                  >
                     <FiEdit color="orange" />
                   </button>
-                  <button className="btn-acao" title="Excluir" onClick={() => deletarCategorias(categoria.id)}>
+                  <button
+                    className="btn-acao"
+                    title="Excluir"
+                    onClick={() => deletarCategoria(categoria.id)}
+                  >
                     <FiTrash color="red" />
                   </button>
                 </td>
@@ -135,6 +119,15 @@ const Categorias = () => {
           </tbody>
         </table>
       </div>
+
+      {modalOpen && (
+        <ModalCategoria
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          atualizarLista={obterCategorias}
+          categoria={categoriaEditando}
+        />
+      )}
     </div>
   );
 };

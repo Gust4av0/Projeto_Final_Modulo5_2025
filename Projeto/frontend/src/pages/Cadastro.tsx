@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios"
-import "../styles/Cadastro.css"; // Importando o CSS da página
-import background from "../images/background.jpg"; // Importando a imagem de fundo
+import axios from "axios";
+import "../styles/Cadastro.css";
+import background from "../images/background.jpg";
 
 function Cadastro() {
   const [name, setName] = useState("");
@@ -54,7 +54,10 @@ function Cadastro() {
   };
 
   return (
-    <div className="cadastro-container" style={{ backgroundImage: `url(${background})` }}>
+    <div
+      className="cadastro-container"
+      style={{ backgroundImage: `url(${background})` }}
+    >
       <title>Cadastro - Aluga Aí Zé</title>
       <div className="cadastro-box">
         <h1>Cadastro</h1>
@@ -62,21 +65,51 @@ function Cadastro() {
         {success && <p className="success-message">{success}</p>}
         <form onSubmit={cadastrarUsuario}>
           <div className="input-group">
-            <input type="text" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} />
+            <input
+              className="input-medio"
+              type="text"
+              placeholder="Nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
           <div className="input-group">
-            <input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input
+              className="input-medio"
+              type="email"
+              placeholder="E-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="input-group">
-            <input type="text" placeholder="CPF" value={cpf} onChange={(e) => setCPF(e.target.value)} />
+            <input
+              className="input-medio"
+              type="text"
+              placeholder="CPF"
+              value={cpf}
+              onChange={(e) => setCPF(e.target.value)}
+            />
           </div>
           <div className="input-group">
-            <input type="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input
+              className="input-medio"
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <div className="input-group">
-            <input type="password" placeholder="Confirme sua senha" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <input
+              className="input-medio"
+              type="password"
+              placeholder="Confirme sua senha"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
           </div>
-          <button type="submit" className="cadastro-button">
+          <button type="submit" className="cadastro-button pequeno">
             Cadastrar
           </button>
         </form>

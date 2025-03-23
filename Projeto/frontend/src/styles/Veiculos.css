@@ -5,7 +5,7 @@
   position: relative;
 }
 
-/* TÍTULO PERMANENTE NO CANTO SUPERIOR ESQUERDO */
+/* TÍTULO NO CANTO SUPERIOR ESQUERDO */
 .titulo-filtro {
   text-align: left;
   margin-bottom: 10px;
@@ -43,7 +43,7 @@
   color: white;
 }
 
-/* ESPAÇAMENTO ENTRE TELEFONE E BOTÕES */
+/* ESPAÇAMENTO ENTRE ÚLTIMO INPUT E BOTÕES */
 .filtro-inputs input:last-child {
   margin-right: 20px;
 }
@@ -54,7 +54,16 @@
 }
 
 .btn-filtrar {
-  background: #007bff;
+  background: #28a745; /* Verde escuro (FILTRAR) */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-adicionar {
+  background: #007bff; /* Azul (ADICIONAR) */
   color: white;
   padding: 10px 15px;
   border: none;
@@ -63,7 +72,7 @@
 }
 
 .btn-limpar {
-  background: #ff8c00;
+  background: #ff8c00; /* Laranja (LIMPAR) */
   color: white;
   padding: 10px 15px;
   border: none;
@@ -71,18 +80,15 @@
   cursor: pointer;
 }
 
-/* ============================
-   ESTILIZANDO A TABELA
-   ============================ */
+/* ESTILIZANDO A TABELA */
 .veiculos-tabela-container {
-  margin-top: 15px;
+  margin-top: 20px;
   background: #222;
   padding: 12px;
   border-radius: 15px;
   border: 1px solid #666;
 }
 
-/* ADICIONANDO BORDA ENTRE OS TEMAS DA TABELA */
 .veiculos-tabela {
   width: 100%;
   border-collapse: separate;
@@ -94,12 +100,28 @@
   color: white;
   padding: 12px;
   text-align: left;
-  border: 1px solid #444; /* Adiciona separação */
+  border: 1px solid #444;
 }
 
 .veiculos-tabela td {
   padding: 12px;
-  border: 1px solid #444; /* Adiciona separação */
+  border: 1px solid #444;
+}
+
+.veiculos-tabela tr:nth-child(even) {
+  background: #2c2c2c;
+}
+
+.veiculos-tabela tr:nth-child(odd) {
+  background: #333;
+}
+
+.veiculos-tabela thead {
+  border-bottom: 2px solid #fff;
+}
+
+.veiculos-tabela tbody tr {
+  border-bottom: 1px solid #555;
 }
 
 /* BOTÕES DE AÇÃO BRANCOS COM ÍCONES COLORIDOS */

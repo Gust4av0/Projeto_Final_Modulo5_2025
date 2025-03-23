@@ -30,6 +30,7 @@
 
 .filtro-inputs {
   display: flex;
+  gap: 10px;
   flex: 1;
 }
 
@@ -42,6 +43,11 @@
   color: white;
 }
 
+/* ESPAÇAMENTO ENTRE O CAMPO E BOTÕES */
+.filtro-inputs input:last-child {
+  margin-right: 20px;
+}
+
 /* BOTÕES */
 .filtro-botoes {
   display: flex;
@@ -49,6 +55,15 @@
 }
 
 .btn-filtrar {
+  background: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-adicionar {
   background: #007bff;
   color: white;
   padding: 10px 15px;
@@ -66,27 +81,17 @@
   cursor: pointer;
 }
 
-.btn-adicionar {
-  background: #28a745;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 /* ============================
    ESTILIZANDO A TABELA
    ============================ */
 .categorias-tabela-container {
-  margin-top: 15px;
+  margin-top: 20px;
   background: #222;
   padding: 12px;
   border-radius: 15px;
   border: 1px solid #666;
 }
 
-/* ADICIONANDO BORDA ENTRE OS TEMAS DA TABELA */
 .categorias-tabela {
   width: 100%;
   border-collapse: separate;
@@ -104,6 +109,22 @@
 .categorias-tabela td {
   padding: 12px;
   border: 1px solid #444;
+}
+
+.categorias-tabela tr:nth-child(even) {
+  background: #2c2c2c;
+}
+
+.categorias-tabela tr:nth-child(odd) {
+  background: #333;
+}
+
+.categorias-tabela thead {
+  border-bottom: 2px solid #fff;
+}
+
+.categorias-tabela tbody tr {
+  border-bottom: 1px solid #555;
 }
 
 /* BOTÕES DE AÇÃO BRANCOS COM ÍCONES COLORIDOS */
