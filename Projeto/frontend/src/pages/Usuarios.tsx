@@ -10,7 +10,6 @@ export interface Usuario {
   nome: string;
   cpf: string;
   email: string;
-  telefone: string;
 }
 
 const Usuarios = () => {
@@ -19,7 +18,6 @@ const Usuarios = () => {
     nome: "",
     cpf: "",
     email: "",
-    telefone: "",
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [usuarioEditando, setUsuarioEditando] = useState<Usuario | null>(null);
@@ -38,7 +36,7 @@ const Usuarios = () => {
   }, [obterUsuarios]);
 
   const limparFiltros = () => {
-    setFiltros({ nome: "", cpf: "", email: "", telefone: "" });
+    setFiltros({ nome: "", cpf: "", email: "",});
   };
 
   const handleFiltroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,12 +79,6 @@ const Usuarios = () => {
             value={filtros.email}
             onChange={handleFiltroChange}
           />
-          <input
-            name="telefone"
-            placeholder="Telefone"
-            value={filtros.telefone}
-            onChange={handleFiltroChange}
-          />
         </div>
         <div className="filtro-botoes">
           <button className="btn-filtrar" onClick={obterUsuarios}>
@@ -114,7 +106,6 @@ const Usuarios = () => {
               <th>Nome</th>
               <th>CPF</th>
               <th>E-mail</th>
-              <th>Telefone</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -124,7 +115,6 @@ const Usuarios = () => {
                 <td>{usuario.nome}</td>
                 <td>{usuario.cpf}</td>
                 <td>{usuario.email}</td>
-                <td>{usuario.telefone}</td>
                 <td className="acoes">
                   <button
                     className="btn-acao"

@@ -5,6 +5,7 @@ import usuarioRota from "./routes/usuarioRota";
 import categoriaRota from "./routes/categoriaRota";
 import locadoraRota from "./routes/locadorasRota";
 import loginRota from "./routes/loginRoutes";
+import veiculosRota from "./routes/veiculosRota";
 
 const app = express();
 app.use(cors());
@@ -23,6 +24,9 @@ app.use(locadoraRota)
 
 //rota para a validação de login
 app.use(loginRota);
+
+//rota para o crud de veículos
+app.use(veiculosRota);
 
 //rota de teste
 app.get("/", (req, res) => {

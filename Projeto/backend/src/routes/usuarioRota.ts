@@ -6,8 +6,6 @@ import { authMiddeleware } from '../middleware/authMiddleware'
 
 const router = express.Router();
 
-
-
 //rota pública 
 router.post("/usuarios", criarUsuario)
 
