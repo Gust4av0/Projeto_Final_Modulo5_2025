@@ -1,8 +1,8 @@
-// src/components/ModalCategoria.tsx
 import "../styles/Modal.css";
 import { useState, useEffect } from "react";
 import { Categoria } from "../pages/Categorias";
 import api from "../services/api";
+import Swal from "sweetalert2";
 
 interface ModalCategoriaProps {
   isOpen: boolean;
@@ -28,18 +28,23 @@ const ModalCategoria = ({
   }, [categoria]);
 
   const handleSalvar = async () => {
+    if (!nome.trim()) {
+      Swal.fire("Aviso", "Preencha o nome da categoria.", "warning");
+      return;
+    }
+
     try {
       if (categoria) {
         await api.put(`/categorias/${categoria.id}`, { nome });
-        alert("Categoria atualizada com sucesso!");
+        Swal.fire("Sucesso", "Categoria atualizada com sucesso!", "success");
       } else {
         await api.post("/categorias", { nome });
-        alert("Categoria cadastrada com sucesso!");
+        Swal.fire("Sucesso", "Categoria cadastrada com sucesso!", "success");
       }
-      atualizarLista();
+      await atualizarLista();
       onClose();
     } catch {
-      alert("Erro ao salvar categoria!");
+      Swal.fire("Erro", "Erro ao salvar categoria!", "error");
     }
   };
 

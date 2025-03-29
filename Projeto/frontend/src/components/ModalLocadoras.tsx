@@ -3,6 +3,7 @@ import "../styles/Modal.css";
 import { useState, useEffect } from "react";
 import { Locadora } from "../pages/Locadoras";
 import api from "../services/api";
+import Swal from "sweetalert2";
 
 interface ModalLocadoraProps {
   isOpen: boolean;
@@ -34,18 +35,44 @@ const ModalLocadora = ({
   }, [locadora]);
 
   const handleSalvar = async () => {
+    if (!nome || !cidade || !estado) {
+      Swal.fire({
+        icon: "warning",
+        title: "Campos obrigatórios",
+        text: "Preencha todos os campos antes de salvar.",
+      });
+      return;
+    }
+
     try {
       if (locadora) {
         await api.put(`/locadoras/${locadora.id}`, { nome, cidade, estado });
-        alert("Locadora atualizada com sucesso!");
+        Swal.fire({
+          icon: "success",
+          title: "Locadora atualizada",
+          text: "Locadora atualizada com sucesso!",
+        });
       } else {
         await api.post("/locadoras", { nome, cidade, estado });
-        alert("Locadora cadastrada com sucesso!");
+        Swal.fire({
+          icon: "success",
+          title: "Locadora cadastrada",
+          text: "Locadora cadastrada com sucesso!",
+        });
       }
-      atualizarLista();
+      await atualizarLista();
       onClose();
-    } catch {
-      alert("Erro ao salvar locadora!");
+    } catch (error: unknown) {
+      const errorMsg =
+        typeof error === "object" && error !== null && "response" in error
+          ? (error as any).response?.data?.message || "Erro ao salvar locadora!"
+          : "Erro ao salvar locadora!";
+
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: errorMsg,
+      });
     }
   };
 

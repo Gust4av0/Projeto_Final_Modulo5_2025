@@ -1,7 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import "../styles/Veiculos.css";
-import { FiTrash, FiEdit } from "react-icons/fi";
+import {
+  FiTrash,
+  FiEdit,
+  FiTag,
+  FiCalendar,
+  FiDollarSign,
+} from "react-icons/fi";
 import api from "../services/api";
+import Swal from "sweetalert2";
 
 export interface Veiculo {
   id: number;
@@ -16,7 +23,17 @@ export interface Veiculo {
 }
 
 const Veiculos = () => {
-  const [filtros, setFiltros] = useState({
+  const [filtros, setFiltros] = useState<{
+    id: number | null;
+    marca: string;
+    modelo: string;
+    ano: string;
+    placa: string;
+    preco_por_dia: string;
+    imagem: string;
+    categoria: string;
+    locadora: string;
+  }>({
     id: null,
     marca: "",
     modelo: "",
@@ -27,9 +44,14 @@ const Veiculos = () => {
     categoria: "",
     locadora: "",
   });
+
   const [veiculos, setVeiculos] = useState<Veiculo[]>([]);
-  const [categorias, setCategorias] = useState<{ id: number; nome: string }[]>([]);
-  const [locadoras, setLocadoras] = useState<{ id: number; nome: string }[]>([]);
+  const [categorias, setCategorias] = useState<{ id: number; nome: string }[]>(
+    []
+  );
+  const [locadoras, setLocadoras] = useState<{ id: number; nome: string }[]>(
+    []
+  );
 
   const obterCategoriasELocadoras = useCallback(async () => {
     try {
@@ -40,7 +62,7 @@ const Veiculos = () => {
       setCategorias(categoriasResponse.data);
       setLocadoras(locadorasResponse.data);
     } catch {
-      alert("Erro ao carregar categorias e locadoras!");
+      Swal.fire("Erro", "Erro ao carregar categorias e locadoras!", "error");
     }
   }, []);
 
@@ -49,7 +71,7 @@ const Veiculos = () => {
       const response = await api.get("/veiculos");
       setVeiculos(response.data);
     } catch {
-      alert("Erro ao carregar veículos!");
+      Swal.fire("Erro", "Erro ao carregar veículos!", "error");
     }
   }, []);
 
@@ -58,7 +80,9 @@ const Veiculos = () => {
     obterCategoriasELocadoras();
   }, [obterVeiculos, obterCategoriasELocadoras]);
 
-  const handleFiltroChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleFiltroChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFiltros({ ...filtros, [e.target.name]: e.target.value });
   };
 
@@ -77,13 +101,23 @@ const Veiculos = () => {
   };
 
   const deletarVeiculo = async (id: number) => {
-    if (!window.confirm("Tem certeza que deseja excluir este veículo?")) return;
+    const confirmacao = await Swal.fire({
+      title: "Tem certeza?",
+      text: "Você deseja excluir este veículo?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!confirmacao.isConfirmed) return;
+
     try {
       await api.delete(`/veiculos/${id}`);
-      alert("Veículo excluído com sucesso!");
+      Swal.fire("Sucesso", "Veículo excluído com sucesso!", "success");
       obterVeiculos();
     } catch {
-      alert("Erro ao excluir veículo!");
+      Swal.fire("Erro", "Erro ao excluir veículo!", "error");
     }
   };
 
@@ -102,15 +136,17 @@ const Veiculos = () => {
 
       if (filtros.id) {
         await api.put(`/veiculos/${filtros.id}`, veiculoData);
-        alert("Veículo atualizado com sucesso!");
+        Swal.fire("Sucesso", "Veículo atualizado com sucesso!", "success");
       } else {
         await api.post("/veiculos", veiculoData);
-        alert("Veículo cadastrado com sucesso!");
+        Swal.fire("Sucesso", "Veículo cadastrado com sucesso!", "success");
       }
       obterVeiculos();
       limparFiltros();
-    } catch (error) {
-      alert("Erro ao salvar veículo!");
+    } catch (error: unknown) {
+      const mensagem =
+        (error as any)?.response?.data?.error || "Erro ao salvar veículo!";
+      Swal.fire("Erro", mensagem, "error");
     }
   };
 
@@ -128,66 +164,139 @@ const Veiculos = () => {
     });
   };
 
+  const formatarPlaca = (placa: string) => {
+    return placa.toUpperCase().replace(/(\w{3})(\w{4})/, "$1-$2");
+  };
+
   return (
     <div className="veiculos-container">
       <h1 className="titulo-filtro">Veículos</h1>
 
       <div className="filtros">
         <div className="filtro-inputs">
-          <input name="marca" placeholder="Marca" value={filtros.marca} onChange={handleFiltroChange} />
-          <input name="modelo" placeholder="Modelo" value={filtros.modelo} onChange={handleFiltroChange} />
-          <input name="ano" placeholder="Ano" value={filtros.ano} onChange={handleFiltroChange} />
-          <input name="placa" placeholder="Placa" value={filtros.placa} onChange={handleFiltroChange} />
-          <input name="preco_por_dia" placeholder="Diária" value={filtros.preco_por_dia} onChange={handleFiltroChange} />
-          <input name="imagem" placeholder="URL da Imagem" value={filtros.imagem} onChange={handleFiltroChange} />
-          <select name="categoria" value={filtros.categoria} onChange={handleFiltroChange}>
+          <input
+            name="marca"
+            placeholder="Marca"
+            value={filtros.marca}
+            onChange={handleFiltroChange}
+          />
+          <input
+            name="modelo"
+            placeholder="Modelo"
+            value={filtros.modelo}
+            onChange={handleFiltroChange}
+          />
+          <input
+            name="ano"
+            placeholder="Ano"
+            value={filtros.ano}
+            onChange={handleFiltroChange}
+          />
+          <input
+            name="placa"
+            placeholder="Placa"
+            value={filtros.placa}
+            onChange={handleFiltroChange}
+          />
+          <input
+            name="preco_por_dia"
+            placeholder="Diária"
+            value={filtros.preco_por_dia}
+            onChange={handleFiltroChange}
+          />
+          <input
+            name="imagem"
+            placeholder="URL da Imagem"
+            value={filtros.imagem}
+            onChange={handleFiltroChange}
+          />
+          <select
+            name="categoria"
+            value={filtros.categoria}
+            onChange={handleFiltroChange}
+          >
             <option value="">Selecione a Categoria</option>
             {categorias.map((categoria) => (
-              <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.nome}
+              </option>
             ))}
           </select>
-          <select name="locadora" value={filtros.locadora} onChange={handleFiltroChange}>
+          <select
+            name="locadora"
+            value={filtros.locadora}
+            onChange={handleFiltroChange}
+          >
             <option value="">Selecione a Locadora</option>
             {locadoras.map((locadora) => (
-              <option key={locadora.id} value={locadora.id}>{locadora.nome}</option>
+              <option key={locadora.id} value={locadora.id}>
+                {locadora.nome}
+              </option>
             ))}
           </select>
-          <button className="btn-adicionar" onClick={salvarVeiculo}>Adicionar</button>
-          <button className="btn-limpar" onClick={limparFiltros}>Limpar</button>
+        </div>
+        <div className="filtro-botoes">
+          <button className="btn-adicionar" onClick={salvarVeiculo}>
+            Adicionar
+          </button>
+          <button className="btn-limpar" onClick={limparFiltros}>
+            Limpar
+          </button>
         </div>
       </div>
 
-      <table className="veiculos-tabela">
-        <thead>
-          <tr>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Ano</th>
-            <th>Placa</th>
-            <th>Preço por Dia</th>
-            <th>Categoria</th>
-            <th>Locadora</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {veiculos.map((veiculo) => (
-            <tr key={veiculo.id}>
-              <td>{veiculo.marca}</td>
-              <td>{veiculo.modelo}</td>
-              <td>{veiculo.ano}</td>
-              <td>{veiculo.placa}</td>
-              <td>R$ {veiculo.preco_por_dia.toFixed(2)}</td>
-              <td>{veiculo.categoria?.nome || "Sem categoria"}</td>
-              <td>{veiculo.locadora?.nome || "Sem locadora"}</td>
-              <td>
-                <button onClick={() => editarVeiculo(veiculo)}><FiEdit /></button>
-                <button onClick={() => deletarVeiculo(veiculo.id)}><FiTrash /></button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="veiculos-card-container">
+        {veiculos.map((veiculo) => (
+          <div className="veiculo-card" key={veiculo.id}>
+            <div className="veiculo-card-header">
+              <h3>
+                {veiculo.marca} {veiculo.modelo}
+              </h3>
+              <div className="veiculo-categoria">
+                Categoria: {veiculo.categoria?.nome || "-"}
+              </div>
+            </div>
+
+            <img
+              className="veiculo-imagem"
+              src={veiculo.imagem}
+              alt={veiculo.modelo}
+            />
+
+            <div className="veiculo-card-footer">
+              <div className="veiculo-linha">
+                <FiTag /> <span>Placa: {formatarPlaca(veiculo.placa)}</span>
+              </div>
+              <div className="veiculo-linha">
+                <FiCalendar /> <span>Ano: {veiculo.ano}</span>
+              </div>
+              <div className="veiculo-linha">
+                <FiDollarSign />{" "}
+                <span>Diária: R$ {veiculo.preco_por_dia.toFixed(2)}</span>
+              </div>
+              <div className="acoes-container">
+                <div className="acoes">
+                  <button
+                    className="btn-acao"
+                    title="Editar"
+                    onClick={() => editarVeiculo(veiculo)}
+                  >
+                    <FiEdit className="icon-edit" />
+                  </button>
+                  <button
+                    className="btn-acao"
+                    title="Excluir"
+                    onClick={() => deletarVeiculo(veiculo.id)}
+                  >
+                    <FiTrash className="icon-trash" />
+                  </button>
+                </div>
+                <button className="btn-alugar">Alugar</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

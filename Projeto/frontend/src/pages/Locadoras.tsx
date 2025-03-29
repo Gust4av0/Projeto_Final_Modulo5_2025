@@ -1,9 +1,9 @@
-// src/pages/Locadoras.tsx
 import { useState, useEffect, useCallback } from "react";
 import "../styles/Locadoras.css";
 import { FiTrash, FiEdit } from "react-icons/fi";
 import api from "../services/api";
 import Modal from "../components/ModalLocadoras";
+import Swal from "sweetalert2";
 
 export interface Locadora {
   id: number;
@@ -29,7 +29,11 @@ const Locadoras = () => {
       const response = await api.get("/locadoras", { params: formData });
       setLocadoras(response.data);
     } catch {
-      alert("Erro ao carregar locadoras!");
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: "Erro ao carregar locadoras!",
+      });
     }
   }, [formData]);
 
@@ -42,14 +46,33 @@ const Locadoras = () => {
   };
 
   const deletarLocadora = async (id: number) => {
-    if (!window.confirm("Tem certeza que deseja excluir esta locadora?"))
-      return;
+    const resultado = await Swal.fire({
+      icon: "warning",
+      title: "Confirmar exclusão",
+      text: "Tem certeza que deseja excluir esta locadora?",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!resultado.isConfirmed) return;
+
     try {
       await api.delete(`/locadoras/${id}`);
-      alert("Locadora excluída com sucesso!");
-      obterLocadoras();
+      await obterLocadoras();
+      Swal.fire({
+        icon: "success",
+        title: "Locadora excluída",
+        text: "A locadora foi excluída com sucesso.",
+      });
     } catch {
-      alert("Erro ao excluir locadora!");
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: "Erro ao excluir locadora!",
+      });
     }
   };
 

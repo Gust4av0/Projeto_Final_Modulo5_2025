@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Usuario } from "../pages/Usuarios";
 import "../styles/Modal.css";
 import api from "../services/api";
+import Swal from "sweetalert2";
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,37 +12,70 @@ interface ModalProps {
 }
 
 const Modal = ({ isOpen, onClose, atualizarLista, usuario }: ModalProps) => {
-  if (!isOpen) return null;
-
-  // Estados para armazenar os inputs do formulário
-  const [nome, setNome] = useState(usuario?.nome || "");
-  const [cpf, setCpf] = useState(usuario?.cpf || "");
-  const [email, setEmail] = useState(usuario?.email || "");
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
 
+  useEffect(() => {
+    if (usuario) {
+      setNome(usuario.nome || "");
+      setCpf(usuario.cpf || "");
+      setEmail(usuario.email || "");
+    } else {
+      setNome("");
+      setCpf("");
+      setEmail("");
+    }
+    setSenha("");
+    setConfirmarSenha("");
+  }, [usuario]);
+
+  if (!isOpen) return null;
+
   const handleSubmit = async () => {
-    // Validação básica
     if (!nome || !cpf || !email || !senha || senha !== confirmarSenha) {
-      alert("Preencha todos os campos corretamente.");
+      Swal.fire({
+        icon: "warning",
+        title: "Campos inválidos",
+        text: "Preencha todos os campos corretamente.",
+      });
       return;
     }
 
     try {
       if (usuario) {
-        // Se o usuário já existe, faz um PUT (editar)
-        await api.put(`/usuarios/${usuario.id}`, { nome, cpf, email, senha });
+        await api.put(`/usuarios/${usuario.id}`, {
+          nome,
+          cpf,
+          email,
+          senha,
+        });
+        Swal.fire({
+          icon: "success",
+          title: "Usuário atualizado",
+          text: "Dados atualizados com sucesso!",
+        });
       } else {
-        // Se não existe, faz um POST (adicionar)
         await api.post("/usuarios", { nome, cpf, email, senha });
+        Swal.fire({
+          icon: "success",
+          title: "Usuário cadastrado",
+          text: "Cadastro realizado com sucesso!",
+        });
       }
 
-      // Atualiza a lista e fecha o modal
       await atualizarLista();
       onClose();
-    } catch (error) {
-      console.error("Erro ao salvar usuário:", error);
-      alert("Erro ao salvar usuário.");
+    } catch (error: any) {
+      const mensagemErro =
+        error.response?.data?.error || "Erro ao salvar usuário.";
+      Swal.fire({
+        icon: "error",
+        title: "Erro",
+        text: mensagemErro,
+      });
     }
   };
 

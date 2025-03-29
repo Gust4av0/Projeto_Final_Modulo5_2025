@@ -1,9 +1,9 @@
-// src/pages/Categorias.tsx
 import { useState, useEffect, useCallback } from "react";
 import "../styles/Categorias.css";
 import { FiTrash, FiEdit } from "react-icons/fi";
 import api from "../services/api";
 import ModalCategoria from "../components/ModalCategorias";
+import Swal from "sweetalert2";
 
 export interface Categoria {
   id: number;
@@ -25,7 +25,7 @@ const Categorias = () => {
       });
       setCategorias(response.data);
     } catch {
-      alert("Erro ao carregar categorias!");
+      Swal.fire("Erro", "Erro ao carregar categorias!", "error");
     }
   }, [filtroNome]);
 
@@ -34,15 +34,23 @@ const Categorias = () => {
   }, [obterCategorias]);
 
   const deletarCategoria = async (id: number) => {
-    if (!window.confirm("Tem certeza que deseja excluir esta categoria?"))
-      return;
+    const confirm = await Swal.fire({
+      title: "Tem certeza?",
+      text: "Deseja realmente excluir esta categoria?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!confirm.isConfirmed) return;
 
     try {
       await api.delete(`/categorias/${id}`);
-      alert("Categoria excluída com sucesso!");
+      Swal.fire("Sucesso", "Categoria excluída com sucesso!", "success");
       obterCategorias();
     } catch {
-      alert("Erro ao excluir categoria!");
+      Swal.fire("Erro", "Erro ao excluir categoria!", "error");
     }
   };
 

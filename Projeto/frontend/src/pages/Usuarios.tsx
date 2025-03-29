@@ -4,6 +4,7 @@ import "../styles/Usuarios.css";
 import { FiTrash, FiEdit } from "react-icons/fi";
 import api from "../services/api";
 import Modal from "../components/Modal";
+import Swal from "sweetalert2";
 
 export interface Usuario {
   id: number;
@@ -27,7 +28,12 @@ const Usuarios = () => {
       const response = await api.get("/usuarios", { params: filtros });
       setUsuarios(response.data);
     } catch {
-      alert("Erro ao carregar usuários!");
+      Swal.fire({
+        icon: "error",
+        title: "Erro!",
+        text: "Erro ao carregar usuários!",
+        confirmButtonColor: "#007bff",
+      });
     }
   }, [filtros]);
 
@@ -36,7 +42,7 @@ const Usuarios = () => {
   }, [obterUsuarios]);
 
   const limparFiltros = () => {
-    setFiltros({ nome: "", cpf: "", email: "",});
+    setFiltros({ nome: "", cpf: "", email: "" });
   };
 
   const handleFiltroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,14 +50,35 @@ const Usuarios = () => {
   };
 
   const deletarUsuario = async (id: number) => {
-    if (!window.confirm("Tem certeza que deseja excluir este usuário?")) return;
+    const confirmacao = await Swal.fire({
+      icon: "warning",
+      title: "Tem certeza?",
+      text: "Você deseja realmente excluir este usuário?",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+    });
+
+    if (!confirmacao.isConfirmed) return;
 
     try {
       await api.delete(`/usuarios/${id}`);
-      alert("Usuário excluído com sucesso!");
+      Swal.fire({
+        icon: "success",
+        title: "Sucesso!",
+        text: "Usuário excluído com sucesso!",
+        confirmButtonColor: "#28a745",
+      });
       obterUsuarios();
     } catch {
-      alert("Erro ao excluir usuário!");
+      Swal.fire({
+        icon: "error",
+        title: "Erro!",
+        text: "Erro ao excluir usuário!",
+        confirmButtonColor: "#dc3545",
+      });
     }
   };
 
