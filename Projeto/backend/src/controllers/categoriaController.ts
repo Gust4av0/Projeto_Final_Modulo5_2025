@@ -8,7 +8,7 @@ export const obterCategorias = async (req: Request, res: Response) => {
   }
 
   //rota para pegar as categorias por ID
-export const obterCategoriaId = async (req: Request< {id: number}>, res: Response) => {
+export const obterCategoriaId = async (req: Request< {id: string}>, res: Response) => {
     const categoria = await CategoriaModel.findByPk(req.params.id)
     
     return res.json(categoria);
@@ -33,7 +33,7 @@ export const criarCategoria = async (req: Request, res: Response) => {
 }
 
 //rota para atualizar uma categoria
-export const atualizarCategoria = async (req: Request< {id: number}>, res: Response) => {
+export const atualizarCategoria = async (req: Request< {id: string}>, res: Response) => {
 
     try {
         const { nome } = req.body
@@ -60,7 +60,7 @@ export const atualizarCategoria = async (req: Request< {id: number}>, res: Respo
 }
 
 //rota para deletar uma categoria
-export const deletarCategoriaId =  async (req: Request <{id: number}>, res: Response) => {
+export const deletarCategoriaId =  async (req: Request <{id: string}>, res: Response) => {
     try{ 
     const categoria = await CategoriaModel.findByPk(req.params.id);
         if(!categoria){

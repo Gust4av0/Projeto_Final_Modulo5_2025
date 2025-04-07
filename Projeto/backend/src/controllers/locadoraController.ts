@@ -9,7 +9,7 @@ export const obterLocadoras = async (req: Request, res: Response) => {
 
 
     //rota para pegar as locadoras por ID
-export const obterLocadorasId = async (req: Request< {id: number}>, res: Response) => {
+export const obterLocadorasId = async (req: Request< {id: string}>, res: Response) => {
     const locadoras = await LocadorasModel.findByPk(req.params.id)
     
     return res.json(locadoras);
@@ -34,7 +34,7 @@ export const criarLocadora = async (req: Request, res: Response) => {
 }
 
 //rota para atualizar uma locadora
-export const atualizarLocadora = async (req: Request< {id: number}>, res: Response) => {
+export const atualizarLocadora = async (req: Request< {id: string}>, res: Response) => {
 
     try {
         const { nome, cidade, estado } = req.body
@@ -63,7 +63,7 @@ export const atualizarLocadora = async (req: Request< {id: number}>, res: Respon
 }
 
 //rota para deletar uma locadora
-export const deletarLocadoraId =  async (req: Request <{id: number}>, res: Response) => {
+export const deletarLocadoraId =  async (req: Request <{id: string}>, res: Response) => {
     try{ 
     const locadora = await LocadorasModel.findByPk(req.params.id);
         if(!locadora){

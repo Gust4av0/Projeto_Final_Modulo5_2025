@@ -1,8 +1,7 @@
-import { NavLink } from "react-router-dom";
-import { FiHome, FiUsers, FiKey, FiLayers } from "react-icons/fi"; // FiLayers para Categorias
-import perfilImg from "../images/perfil.jpg";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FiHome, FiUsers, FiKey, FiLayers } from "react-icons/fi";
 import "../styles/Sidebar.css";
-import { FaCarRear  } from "react-icons/fa6";
+import { FaCarRear } from "react-icons/fa6";
 import { FaSignOutAlt } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
 
@@ -13,6 +12,7 @@ interface SidebarProps {
 }
 
 function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
+
   return (
     <div className={`sidebar ${isMinimized ? "minimized" : ""}`}>
       <button
@@ -24,8 +24,7 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
 
       {!isMinimized && (
         <div className="user-profile">
-          <img src={perfilImg} alt="Perfil" className="profile-img" />
-          <p>{user?.nome}</p>
+          <button>{user?.nome}</button>
         </div>
       )}
 
@@ -36,7 +35,7 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
             {!isMinimized && <span>Home</span>}
           </NavLink>
         </li>
-        <hr></hr>
+        <hr />
         <li>
           <NavLink to="/usuarios">
             <FiUsers size={24} />
@@ -62,12 +61,11 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
           </NavLink>
         </li>
         <li>
-          <NavLink to="">
-          <FaSignOutAlt size={24} />
+          <button className="logout-button">
+            <FaSignOutAlt size={24} />
             {!isMinimized && <span>Sair</span>}
-          </NavLink>
+          </button>
         </li>
-        
       </ul>
     </div>
   );

@@ -108,9 +108,6 @@ const Usuarios = () => {
           />
         </div>
         <div className="filtro-botoes">
-          <button className="btn-filtrar" onClick={obterUsuarios}>
-            Filtrar
-          </button>
           <button
             className="btn-adicionar"
             onClick={() => {

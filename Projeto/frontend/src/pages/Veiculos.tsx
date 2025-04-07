@@ -255,8 +255,11 @@ const Veiculos = () => {
               <div className="veiculo-categoria">
                 Categoria: {veiculo.categoria?.nome || "-"}
               </div>
+              <div className="veiculo-categoria">
+                Locadora: {veiculo.locadora?.nome || "-"}
+              </div>
             </div>
-
+            
             <img
               className="veiculo-imagem"
               src={veiculo.imagem}

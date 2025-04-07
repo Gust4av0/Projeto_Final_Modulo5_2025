@@ -9,6 +9,8 @@ import Categorias from "./pages/Categorias";
 import Cadastro from "./pages/Cadastro";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
+import PrivateRoute from "./components/PrivateRoutes"; // ✅ Importação correta
+import MinhaConta from "./pages/MinhaConta";
 
 type UserType = {
   nome: string;
@@ -31,11 +33,48 @@ function App() {
           <main style={{ flex: 1, padding: "10px", margin: 0 }}>
             <Routes>
               <Route path="/" element={<Navigate to="/home" />} />
-              <Route path="/home" element={<Home user={user} />} />
-              <Route path="/locadoras" element={<Locadoras />} />
-              <Route path="/categorias" element={<Categorias />} />
-              <Route path="/veiculos" element={<Veiculos />} />
-              <Route path="/usuarios" element={<Usuarios />} />
+              
+              {/* 🔒 Rotas protegidas com PrivateRoute */}
+              <Route
+                path="/home"
+                element={
+                  <PrivateRoute>
+                    <Home user={user} />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/locadoras"
+                element={
+                  <PrivateRoute>
+                    <Locadoras />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/categorias"
+                element={
+                  <PrivateRoute>
+                    <Categorias />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/veiculos"
+                element={
+                  <PrivateRoute>
+                    <Veiculos />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/usuarios"
+                element={
+                  <PrivateRoute>
+                    <Usuarios />
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </main>
         </div>
@@ -44,8 +83,7 @@ function App() {
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/cadastro" element={<Cadastro />} />
-          <Route path="/esqueci-senha" element={<ForgotPassword />} />{" "}
-          {/* Adicionada a rota correta */}
+          <Route path="/esqueci-senha" element={<ForgotPassword />} />
         </Routes>
       )}
     </BrowserRouter>

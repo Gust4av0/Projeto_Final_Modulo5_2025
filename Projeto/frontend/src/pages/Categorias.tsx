@@ -73,9 +73,6 @@ const Categorias = () => {
           />
         </div>
         <div className="filtro-botoes">
-          <button className="btn-filtrar" onClick={obterCategorias}>
-            Filtrar
-          </button>
           <button
             className="btn-adicionar"
             onClick={() => {

@@ -106,9 +106,6 @@ const Locadoras = () => {
           />
         </div>
         <div className="filtro-botoes">
-          <button className="btn-filtrar" onClick={obterLocadoras}>
-            Filtrar
-          </button>
           <button
             className="btn-adicionar"
             onClick={() => {

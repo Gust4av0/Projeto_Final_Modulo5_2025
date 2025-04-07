@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/Cadastro.css";
 import background from "../images/background.jpg";
@@ -12,47 +12,64 @@ function Cadastro() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate(); // Criando o useNavigate
 
   const cadastrarUsuario = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
+  
     if (!name || !email || !cpf || !password || !confirmPassword) {
       setError("Preencha todos os campos!");
       return;
     }
-    if (!email.includes("@")) {
+  
+    // Validação de e-mail mais robusta com regex simples
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
       setError("E-mail inválido!");
       return;
     }
+  
+    // Validação de CPF (11 números)
+    const cpfNumeros = cpf.replace(/\D/g, ""); // remove caracteres não numéricos
+    if (cpfNumeros.length !== 11) {
+      setError("CPF inválido! Deve conter 11 números.");
+      return;
+    }
+  
+    // Validação de senha
+    if (password.length < 6) {
+      setError("A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+  
     if (password !== confirmPassword) {
       setError("As senhas não coincidem!");
       return;
     }
-
+  
     try {
       const response = await axios.post("http://localhost:3000/usuarios", {
         nome: name,
         email,
-        cpf,
+        cpf: cpfNumeros,
         senha: password,
       });
-
+    
       if (response.status === 201) {
-        setSuccess("Cadastro realizado com sucesso!");
-        setName("");
-        setEmail("");
-        setCPF("");
-        setPassword("");
-        setConfirmPassword("");
+        navigate("/"); // Redireciona para a tela de login após cadastro
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao cadastrar:", error);
-      setError("Erro ao cadastrar usuário. Tente novamente.");
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error); // erro vindo do back
+      } else {
+        setError("Erro ao cadastrar usuário. Tente novamente.");
+      }
     }
   };
-
+  
   return (
     <div
       className="cadastro-container"
