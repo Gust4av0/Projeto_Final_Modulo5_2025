@@ -1,18 +1,29 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/home.css";
 
 function Home() {
   const [nomeUsuario, setNomeUsuario] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Pegando o nome completo do usuário salvo no login
-    const nomeSalvo = localStorage.getItem("nomeUsuario") || "Usuário";
+    // Verificar se o usuário está autenticado
+    const token = localStorage.getItem("token");
+    const nomeSalvo = localStorage.getItem("nomeUsuario");
 
-    setNomeUsuario(nomeSalvo);
-  }, []);
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    setNomeUsuario(nomeSalvo || "Usuário");
+  }, [navigate]);
 
   return (
-    <div>
-      <h1>Olá, {nomeUsuario}!</h1>
+    <div className="home-container">
+      <h1>
+        Olá, <span className="user-name">{nomeUsuario}</span>!
+      </h1>
       <br />
       <h2>Seja Bem Vindo ao sistema de Locações</h2>
     </div>

@@ -1,10 +1,9 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { FiHome, FiUsers, FiKey, FiLayers } from "react-icons/fi";
+import { FiHome, FiUsers, FiKey, FiLayers, FiUser } from "react-icons/fi";
 import "../styles/Sidebar.css";
 import { FaCarRear } from "react-icons/fa6";
 import { FaSignOutAlt } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
-import { FaFileContract } from "react-icons/fa"; 
 
 interface SidebarProps {
   isMinimized: boolean;
@@ -13,6 +12,19 @@ interface SidebarProps {
 }
 
 function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // adicionei localStore para limpar o token
+    localStorage.removeItem("token");
+    localStorage.removeItem("nomeUsuario");
+    localStorage.removeItem("usuario_id");
+    navigate("/login");
+  };
+
+  const handleMinhaConta = () => {
+    navigate("/minha-conta");
+  };
 
   return (
     <div className={`sidebar ${isMinimized ? "minimized" : ""}`}>
@@ -25,7 +37,14 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
 
       {!isMinimized && (
         <div className="user-profile">
-          <button>{user?.nome}</button>
+          <button
+            className="user-profile-button"
+            onClick={handleMinhaConta}
+            title="Editar perfil"
+          >
+            <FiUser className="profile-icon" />
+            {user?.nome || "Usuário"}
+          </button>
         </div>
       )}
 
@@ -36,7 +55,6 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
             {!isMinimized && <span>Home</span>}
           </NavLink>
         </li>
-        <hr />
         <li>
           <NavLink to="/usuarios">
             <FiUsers size={24} />
@@ -62,7 +80,7 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
           </NavLink>
         </li>
         <li>
-          <button className="logout-button">
+          <button className="logout-button" onClick={handleLogout}>
             <FaSignOutAlt size={24} />
             {!isMinimized && <span>Sair</span>}
           </button>

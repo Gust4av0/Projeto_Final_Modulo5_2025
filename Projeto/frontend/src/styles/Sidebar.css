@@ -8,6 +8,28 @@
   transition: width 0.3s ease-in-out;
 }
 
+.user-profile-button {
+  background-color: #007bff;
+  /* Azul bonito */
+  color: white;
+  border: none;
+  width: 80%;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 auto;
+}
+
+.user-profile-button:hover {
+  background-color: #0056b3;
+  /* Azul escuro ao passar o mouse */
+}
+
 .sidebar.minimized {
   width: 60px;
 }
@@ -17,22 +39,6 @@
   padding: 0;
 }
 
-.logout-button {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  width: 100%;
-  text-align: left;
-}
-
-.logout-button:hover {
-  background-color: #eee;
-}
 
 .sidebar ul li {
   display: flex;
@@ -89,4 +95,29 @@
 /* Oculta o nome quando minimizado */
 .sidebar.minimized .user-profile p {
   display: none;
+}
+
+/* Botão de sair no final da sidebar */
+.logout-container {
+  margin-top: auto;
+  padding: 10px;
+}
+
+.logout-button {
+  background-color: #cc0000;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #a30000;
 }

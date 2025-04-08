@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/home";
 import Usuarios from "./pages/Usuarios";
@@ -9,7 +9,7 @@ import Categorias from "./pages/Categorias";
 import Cadastro from "./pages/Cadastro";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
-import PrivateRoute from "./components/PrivateRoutes"; // ✅ Importação correta
+import PrivateRoute from "./components/PrivateRoutes";
 import MinhaConta from "./pages/MinhaConta";
 
 type UserType = {
@@ -18,8 +18,43 @@ type UserType = {
 };
 
 function App() {
-  const [user, setUser] = useState<UserType | null>(null); // Inicia como null para ir direto ao Login
+  const [user, setUser] = useState<UserType | null>(null);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Verificar se existe um token ao carregar a aplicação
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const nomeUsuario = localStorage.getItem("nomeUsuario");
+
+    if (token && nomeUsuario) {
+      // Se tiver token e nome de usuário, restaurar o estado do usuário
+      setUser({
+        nome: nomeUsuario,
+        email: "", // Como não temos o email salvo, deixamos vazio
+      });
+    }
+
+    setIsLoading(false); // Marca que terminou de carregar
+  }, []);
+
+  // Enquanto está carregando, mostra uma tela de carregamento
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          background: "#000",
+          color: "#fff",
+        }}
+      >
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
@@ -33,13 +68,13 @@ function App() {
           <main style={{ flex: 1, padding: "10px", margin: 0 }}>
             <Routes>
               <Route path="/" element={<Navigate to="/home" />} />
-              
-              {/* 🔒 Rotas protegidas com PrivateRoute */}
+
+              {/* Rotas protegidas com PrivateRoute */}
               <Route
                 path="/home"
                 element={
                   <PrivateRoute>
-                    <Home user={user} />
+                    <Home />
                   </PrivateRoute>
                 }
               />
@@ -75,6 +110,21 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route
+                path="/minha-conta"
+                element={
+                  <PrivateRoute>
+                    <MinhaConta
+                      user={
+                        user || {
+                          nome: localStorage.getItem("nomeUsuario") || "",
+                        }
+                      }
+                      setUser={setUser}
+                    />
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </main>
         </div>
@@ -84,6 +134,7 @@ function App() {
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/esqueci-senha" element={<ForgotPassword />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       )}
     </BrowserRouter>
