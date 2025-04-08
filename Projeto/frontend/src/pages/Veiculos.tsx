@@ -9,6 +9,9 @@ import {
 } from "react-icons/fi";
 import api from "../services/api";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
+
 
 export interface Veiculo {
   id: number;
@@ -20,6 +23,7 @@ export interface Veiculo {
   imagem: string;
   categoria: { id: number; nome: string } | null;
   locadora: { id: number; nome: string } | null;
+  alugado: boolean;
 }
 
 const Veiculos = () => {
@@ -164,6 +168,58 @@ const Veiculos = () => {
     });
   };
 
+  const alugarVeiculo = async (veiculoId: number) => {
+    const { value: formValues } = await Swal.fire({
+      title: "Alugar Veículo",
+      html:
+        '<label>Data Início</label><input id="data-inicio" type="date" class="swal2-input">' +
+        '<label>Data Fim</label><input id="data-fim" type="date" class="swal2-input">',
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Alugar",
+      preConfirm: () => {
+        const data_inicio = (
+          document.getElementById("data-inicio") as HTMLInputElement
+        ).value;
+        const data_fim = (
+          document.getElementById("data-fim") as HTMLInputElement
+        ).value;
+  
+        if (!data_inicio || !data_fim) {
+          Swal.showValidationMessage("Preencha as duas datas!");
+          return;
+        }
+  
+        return { data_inicio, data_fim };
+      },
+    });
+  
+    if (!formValues) return;
+  
+    try {
+      // Aqui, supondo que você tem o ID do usuário logado
+      const usuario_id = localStorage.getItem("usuario_id"); // Exemplo
+  
+      if (!usuario_id) {
+        Swal.fire("Erro", "Usuário não logado!", "error");
+        return;
+      }
+  
+      await api.post("/alugueis", {
+        veiculo_id: veiculoId,
+        usuario_id: Number(usuario_id),
+        data_inicio: formValues.data_inicio,
+        data_fim: formValues.data_fim,
+      });
+  
+      Swal.fire("Sucesso", "Veículo alugado com sucesso!", "success");
+      obterVeiculos();
+    } catch (error: any) {
+      const msg = error.response?.data?.error || "Erro ao alugar o veículo!";
+      Swal.fire("Erro", msg, "error");
+    }
+  };
+  
   const formatarPlaca = (placa: string) => {
     return placa.toUpperCase().replace(/(\w{3})(\w{4})/, "$1-$2");
   };
@@ -294,7 +350,13 @@ const Veiculos = () => {
                     <FiTrash className="icon-trash" />
                   </button>
                 </div>
-                <button className="btn-alugar">Alugar</button>
+                <button
+  className={veiculo.alugado ? 'botao-alugado' : 'botao-alugar'}
+  onClick={() => alugarVeiculo(veiculo.id)}
+  disabled={veiculo.alugado}
+>
+  {veiculo.alugado ? 'Alugado' : 'Alugar'}
+</button>
               </div>
             </div>
           </div>

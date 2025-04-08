@@ -4,6 +4,7 @@ import "../styles/Sidebar.css";
 import { FaCarRear } from "react-icons/fa6";
 import { FaSignOutAlt } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
+import { FaFileContract } from "react-icons/fa"; 
 
 interface SidebarProps {
   isMinimized: boolean;

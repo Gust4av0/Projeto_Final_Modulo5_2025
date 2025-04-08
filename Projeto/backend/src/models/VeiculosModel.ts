@@ -13,6 +13,7 @@ class VeiculosModel extends Model {
     imagem: string | undefined;
     locadora_id: number | undefined;
     categoria_id: number | undefined;
+    alugado: boolean | undefined; 
 }
 
 VeiculosModel.init(
@@ -60,6 +61,11 @@ VeiculosModel.init(
           model: CategoriaModel,
           key: "id",
         },
+        allowNull: false,
+      },
+      alugado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
         allowNull: false,
       },
     },

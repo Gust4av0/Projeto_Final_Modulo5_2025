@@ -29,10 +29,11 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
 
       const response = await api.post("/login", payload);
 
-      const { token, nome } = response.data;
+      const { token, nome, id } = response.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("nomeUsuario", nome);
+      localStorage.setItem("usuario_id", id);
 
       setUser({ nome, email: emailOuCpf });
       navigate("/home");

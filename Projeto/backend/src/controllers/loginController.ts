@@ -27,7 +27,8 @@ export const loginUsuario = async (req: Request, res: Response) => {
     res.status(200).json({
         message: 'Bem-vindo ao sistema!',
         token,
-        nome: usuario.nome // Enviando o nome do usuário no login
+        nome: usuario.nome, // Enviando o nome do usuário no login
+        id: usuario.id
     });
 
 }

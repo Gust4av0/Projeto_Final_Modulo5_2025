@@ -14,6 +14,43 @@
   color: yellow;
 }
 
+.veiculo-status {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.botao-alugar {
+  background-color: green;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px auto;
+  display: block;
+  /* centraliza horizontalmente */
+}
+
+.botao-alugar:hover {
+  background-color: darkgreen;
+}
+
+.botao-alugado {
+  background-color: red;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  margin: 10px auto;
+  display: block;
+  cursor: not-allowed;
+}
+
+.btn-acao:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .filtros {
   display: flex;
   align-items: center;
