@@ -220,6 +220,7 @@ const Veiculos = () => {
     }
   };
   
+  
   const formatarPlaca = (placa: string) => {
     return placa.toUpperCase().replace(/(\w{3})(\w{4})/, "$1-$2");
   };
@@ -351,11 +352,11 @@ const Veiculos = () => {
                   </button>
                 </div>
                 <button
-  className={veiculo.alugado ? 'botao-alugado' : 'botao-alugar'}
+  className={veiculo.alugado ? 'botao-cancelar' : 'botao-alugar'}
   onClick={() => alugarVeiculo(veiculo.id)}
   disabled={veiculo.alugado}
 >
-  {veiculo.alugado ? 'Alugado' : 'Alugar'}
+  {veiculo.alugado ? 'Cancelar Aluguel' : 'Alugar'}
 </button>
               </div>
             </div>

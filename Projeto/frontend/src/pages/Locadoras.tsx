@@ -83,29 +83,7 @@ const Locadoras = () => {
   return (
     <div className="locadoras-container">
       <h1 className="titulo-filtro">Locadoras</h1>
-
-      <div className="filtros">
-        <div className="filtro-inputs">
-          <input
-            name="nome"
-            placeholder="Nome"
-            value={formData.nome}
-            onChange={handleChange}
-          />
-          <input
-            name="cidade"
-            placeholder="Cidade"
-            value={formData.cidade}
-            onChange={handleChange}
-          />
-          <input
-            name="estado"
-            placeholder="Estado"
-            value={formData.estado}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="filtro-botoes">
+      <div className="filtro-botoes">
           <button
             className="btn-adicionar"
             onClick={() => {
@@ -115,12 +93,7 @@ const Locadoras = () => {
           >
             Adicionar
           </button>
-          <button className="btn-limpar" onClick={limparFiltros}>
-            Limpar
-          </button>
         </div>
-      </div>
-
       <div className="locadoras-tabela-container">
         <table className="locadoras-tabela">
           <thead>

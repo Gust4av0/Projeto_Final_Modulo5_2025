@@ -51,6 +51,7 @@
 .filtro-botoes {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 /* Botão FILTRAR com cor roxa */

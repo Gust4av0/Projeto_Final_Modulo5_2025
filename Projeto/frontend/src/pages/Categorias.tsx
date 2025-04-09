@@ -62,18 +62,7 @@ const Categorias = () => {
     <div className="categorias-container">
       <h1 className="titulo-filtro">Categorias</h1>
 
-      <div className="filtros">
-        <div className="filtro-inputs">
-          <input
-            type="text"
-            name="filtroNome"
-            placeholder="Filtrar Nome"
-            value={filtroNome}
-            onChange={(e) => setFiltroNome(e.target.value)}
-          />
-        </div>
-        <div className="filtro-botoes">
-          <button
+      <button
             className="btn-adicionar"
             onClick={() => {
               setCategoriaEditando(null);
@@ -82,11 +71,6 @@ const Categorias = () => {
           >
             Adicionar
           </button>
-          <button className="btn-limpar" onClick={limparFiltros}>
-            Limpar
-          </button>
-        </div>
-      </div>
 
       <div className="categorias-tabela-container">
         <table className="categorias-tabela">

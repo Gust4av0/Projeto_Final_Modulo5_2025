@@ -148,17 +148,17 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
   };
 
   return (
-    <div className="minha-conta-container">
+    <div className="container-minha-conta">
       <h1>Minha Conta</h1>
 
-      <div className="form-container">
+      <div className="container-formulario">
         {carregando ? (
-          <div className="loading-container">
+          <div className="container-carregando">
             <p>Carregando informações...</p>
           </div>
         ) : (
           <form onSubmit={atualizarPerfil}>
-            <div className="form-group">
+            <div className="grupo-formulario">
               <label htmlFor="nome">Nome</label>
               <input
                 type="text"
@@ -168,7 +168,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
               />
             </div>
 
-            <div className="form-group">
+            <div className="grupo-formulario">
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -176,16 +176,16 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled
-                className="email-field" // Classe adicional para estilizar o campo de email
+                className="campo-email"
               />
-              <small className="email-note">
+              <small className="nota-email">
                 O email não pode ser alterado
               </small>
             </div>
 
-            <div className="form-section">
+            <div className="secao-senha">
               <h2>Alterar Senha</h2>
-              <div className="form-group">
+              <div className="grupo-formulario">
                 <label htmlFor="senhaAtual">Senha Atual</label>
                 <input
                   type="password"
@@ -195,7 +195,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="grupo-formulario">
                 <label htmlFor="novaSenha">Nova Senha</label>
                 <input
                   type="password"
@@ -205,7 +205,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
                 />
               </div>
 
-              <div className="form-group">
+              <div className="grupo-formulario">
                 <label htmlFor="confirmarSenha">Confirmar Nova Senha</label>
                 <input
                   type="password"
@@ -216,8 +216,8 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
               </div>
             </div>
 
-            <div className="form-actions">
-              <button type="submit" className="btn-salvar">
+            <div className="acoes-formulario">
+              <button type="submit" className="botao-salvar">
                 Salvar Alterações
               </button>
             </div>

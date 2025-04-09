@@ -1,29 +1,30 @@
-.minha-conta-container {
-  max-width: 500px;
+.container-minha-conta {
+  max-width: 1200px;
+  width: 50%;
   margin: 20px auto;
   padding: 15px;
   color: white;
 }
 
-.minha-conta-container h1 {
+.container-minha-conta h1 {
   color: yellow;
   margin-bottom: 20px;
   text-align: center;
   font-size: 24px;
 }
 
-.form-container {
+.container-formulario {
   background-color: #1e1e2f;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
-.form-group {
+.grupo-formulario {
   margin-bottom: 15px;
 }
 
-.form-group label {
+.grupo-formulario label {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
@@ -31,7 +32,7 @@
   font-size: 14px;
 }
 
-.form-group input {
+.grupo-formulario input {
   width: 100%;
   padding: 10px;
   border: 1px solid #444;
@@ -41,19 +42,19 @@
   font-size: 14px;
 }
 
-.form-group input:disabled {
+.grupo-formulario input:disabled {
   background-color: #232330;
   cursor: not-allowed;
 }
 
 /* Estilo para destacar o campo de email */
-.email-field {
+.campo-email {
   background-color: #232330 !important;
   border-color: #333 !important;
   opacity: 0.9; /* Para parecer menos "desabilitado" */
 }
 
-.email-note {
+.nota-email {
   display: block;
   font-size: 12px;
   color: #999;
@@ -61,20 +62,20 @@
   font-style: italic;
 }
 
-.form-section {
+.secao-senha {
   margin-top: 20px;
   padding-top: 15px;
   border-top: 1px solid #444;
 }
 
-.form-section h2 {
+.secao-senha h2 {
   margin-bottom: 15px;
   color: #ddd;
   font-size: 16px;
 }
 
 /* Estilo para o indicador de carregamento */
-.loading-container {
+.container-carregando {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,7 +84,7 @@
 }
 
 /* Melhor indicador de carregamento */
-.loading-spinner {
+.spinner-carregando {
   border: 3px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border-top: 3px solid yellow;
@@ -102,12 +103,12 @@
   }
 }
 
-.form-actions {
+.acoes-formulario {
   margin-top: 20px;
   text-align: center;
 }
 
-.btn-salvar {
+.botao-salvar {
   background-color: yellow;
   color: black;
   font-weight: bold;
@@ -119,6 +120,65 @@
   transition: background-color 0.3s;
 }
 
-.btn-salvar:hover {
+.botao-salvar:hover {
   background-color: #ffcc00;
+}
+
+/* Mantendo as classes antigas para compatibilidade */
+.minha-conta-container,
+.user-account-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 15px;
+  color: white;
+}
+
+.form-container,
+.user-form-container {
+  background-color: #1e1e2f;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  margin: 0 auto;
+}
+
+.form-group,
+.user-form-group {
+  margin-bottom: 15px;
+}
+
+.form-section,
+.user-password-section {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #444;
+}
+
+.loading-container,
+.user-loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  color: #ddd;
+}
+
+.form-actions,
+.user-form-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btn-salvar,
+.user-save-btn {
+  background-color: yellow;
+  color: black;
+  font-weight: bold;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
 }

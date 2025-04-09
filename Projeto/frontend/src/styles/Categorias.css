@@ -16,8 +16,7 @@
   left: 0;
 }
 
-/* FILTRO COM BOTÕES NO LADO DIREITO */
-.filtros {
+FILTRO COM BOTÕES NO LADO DIREITO .filtros {
   display: flex;
   align-items: center;
   justify-content: space-between;

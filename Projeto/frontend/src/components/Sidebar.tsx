@@ -4,6 +4,7 @@ import "../styles/Sidebar.css";
 import { FaCarRear } from "react-icons/fa6";
 import { FaSignOutAlt } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
+import Swal from "sweetalert2";
 
 interface SidebarProps {
   isMinimized: boolean;
@@ -15,12 +16,22 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // adicionei localStore para limpar o token
-    localStorage.removeItem("token");
-    localStorage.removeItem("nomeUsuario");
-    localStorage.removeItem("usuario_id");
-    navigate("/login");
-  };
+    Swal.fire({
+      title: "Tem certeza?",
+      text: "Você será desconectado do sistema!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#cc0000",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sim, sair!",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        window.location.href = "/login";
+      }
+    });
+  };
 
   const handleMinhaConta = () => {
     navigate("/minha-conta");
@@ -47,20 +58,22 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
           </button>
         </div>
       )}
-
+      <div className="sideBar">
       <ul>
+        <div className="sideBarHome">
         <li>
           <NavLink to="/home">
             <FiHome size={24} />
             {!isMinimized && <span>Home</span>}
           </NavLink>
         </li>
-        <li>
+        </div>
+        {/* <li>
           <NavLink to="/usuarios">
             <FiUsers size={24} />
             {!isMinimized && <span>Usuários</span>}
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink to="/locadoras">
             <FiKey size={24} />
@@ -79,13 +92,15 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
             {!isMinimized && <span>Veículos</span>}
           </NavLink>
         </li>
-        <li>
-          <button className="logout-button" onClick={handleLogout}>
-            <FaSignOutAlt size={24} />
+      </ul>
+      </div>
+
+      <div className="button">
+      <button className="logout-button" onClick={handleLogout}>
+            <FaSignOutAlt size={30} />
             {!isMinimized && <span>Sair</span>}
           </button>
-        </li>
-      </ul>
+          </div>
     </div>
   );
 }

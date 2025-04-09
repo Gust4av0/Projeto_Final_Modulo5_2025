@@ -107,7 +107,7 @@
   background-color: #cc0000;
   color: white;
   border: none;
-  width: 100%;
+  width: 65%;
   padding: 10px;
   border-radius: 5px;
   display: flex;
@@ -120,4 +120,14 @@
 
 .logout-button:hover {
   background-color: #a30000;
+}
+
+.button {
+  padding-top: 75px;
+  padding-left: 20px;
+}
+
+
+.sideBar {
+  padding-top: 30px;
 }

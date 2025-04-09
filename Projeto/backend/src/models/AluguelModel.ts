@@ -26,7 +26,6 @@ AluguelModel.init(
     usuario_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true, // Um usuário só pode alugar um veículo por vez
       references: {
         model: UsuarioModel,
         key: "id",
@@ -35,7 +34,6 @@ AluguelModel.init(
     veiculo_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true, // Um veículo só pode estar alugado uma vez por vez
       references: {
         model: VeiculosModel,
         key: "id",
