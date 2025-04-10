@@ -180,9 +180,15 @@ const Veiculos = () => {
   const alugarVeiculo = async (veiculoId: number) => {
     const { value: formValues } = await Swal.fire({
       title: "Alugar Veículo",
-      html:
-        '<label style="color:red;">Data Início</label><input id="data-inicio" type="date" class="swal2-input">' +
-        '<label style="color:red;">Data Fim</label><input id="data-fim" type="date" class="swal2-input">',
+      html: `
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <label for="data-inicio" style="color: red; margin-bottom: 5px;">Data Início</label>
+      <input id="data-inicio" type="date" class="swal2-input" style="width: 200px;" />
+      
+      <label for="data-fim" style="color: red; margin-top: 15px; margin-bottom: 5px;">Data Fim</label>
+      <input id="data-fim" type="date" class="swal2-input" style="width: 200px;" />
+    </div>
+  `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Alugar",
@@ -230,26 +236,45 @@ const Veiculos = () => {
   };
 
   const cancelarAluguel = async (veiculoId: number) => {
-    const confirmacao = await Swal.fire({
-      title: "Cancelar Aluguel",
-      text: "Tem certeza que deseja cancelar o aluguel deste veículo?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sim, cancelar",
-      cancelButtonText: "Voltar",
-    });
-
-    if (!confirmacao.isConfirmed) return;
-
     try {
-      await api.post(`/alugueis/cancelar/${veiculoId}`);
-      Swal.fire("Cancelado", "Aluguel cancelado com sucesso!", "success");
-      obterVeiculos();
+      const usuario_id = localStorage.getItem("usuario_id");
+      if (!usuario_id) {
+        Swal.fire("Erro", "Usuário não logado!", "error");
+        return;
+      }
+
+      const result = await Swal.fire({
+        title: "Cancelar Aluguel",
+        text: "Você deseja cancelar este aluguel?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sim, cancelar",
+        cancelButtonText: "Não",
+      });
+
+      if (!result.isConfirmed) return;
+
+      const response = await api.get("/alugueis", {
+        params: {
+          veiculo_id: veiculoId,
+          usuario_id,
+        },
+      });
+
+      if (!response.data || response.data.length === 0) {
+        throw new Error("Nenhum aluguel encontrado");
+      }
+
+      const aluguel = response.data[0];
+      await api.delete(`/alugueis/${aluguel.id}`);
+
+      await obterVeiculos();
+      Swal.fire("Sucesso", "Aluguel cancelado com sucesso!", "success");
     } catch (error: unknown) {
-      const msg =
-        (error as { response?: { data?: { error?: string } } })?.response?.data
-          ?.error || "Erro ao cancelar aluguel!";
-      Swal.fire("Erro", msg, "error");
+      console.error("Erro ao cancelar aluguel:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro ao cancelar aluguel";
+      Swal.fire("Erro", errorMessage, "error");
     }
   };
 
