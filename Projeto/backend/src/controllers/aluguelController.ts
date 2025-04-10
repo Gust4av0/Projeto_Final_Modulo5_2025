@@ -9,7 +9,9 @@ export const criarAluguel = async (req: Request, res: Response) => {
     const { usuario_id, veiculo_id, data_inicio, data_fim } = req.body;
 
     if (!usuario_id || !veiculo_id || !data_inicio || !data_fim) {
-      return res.status(400).json({ error: "Todos os campos são obrigatórios" });
+      return res
+        .status(400)
+        .json({ error: "Todos os campos são obrigatórios" });
     }
 
     const veiculo = await VeiculosModel.findByPk(veiculo_id);
@@ -27,7 +29,9 @@ export const criarAluguel = async (req: Request, res: Response) => {
     const dias = Math.ceil((fim.getTime() - inicio.getTime()) / umDia);
 
     if (dias <= 0) {
-      return res.status(400).json({ error: "A data final deve ser após a data inicial" });
+      return res
+        .status(400)
+        .json({ error: "A data final deve ser após a data inicial" });
     }
 
     const valor_total = dias * veiculo.preco_por_dia!;
@@ -54,7 +58,10 @@ export const criarAluguel = async (req: Request, res: Response) => {
 };
 
 // Atualizar datas do aluguel
-export const atualizarDatasAluguel = async (req: Request<{ id: string }>, res: Response) => {
+export const atualizarDatasAluguel = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
   try {
     const { data_inicio, data_fim } = req.body;
 
@@ -69,7 +76,9 @@ export const atualizarDatasAluguel = async (req: Request<{ id: string }>, res: R
     const dias = Math.ceil((fim.getTime() - inicio.getTime()) / umDia);
 
     if (dias <= 0) {
-      return res.status(400).json({ error: "A data final deve ser após a data inicial" });
+      return res
+        .status(400)
+        .json({ error: "A data final deve ser após a data inicial" });
     }
 
     const veiculo = await VeiculosModel.findByPk(aluguel.veiculo_id);
@@ -87,12 +96,17 @@ export const atualizarDatasAluguel = async (req: Request<{ id: string }>, res: R
 
     res.status(200).json(aluguel);
   } catch (error) {
-    res.status(500).json({ error: "Erro ao atualizar datas do aluguel: " + error });
+    res
+      .status(500)
+      .json({ error: "Erro ao atualizar datas do aluguel: " + error });
   }
 };
 
 // Excluir aluguel
-export const deletarAluguel = async (req: Request<{ id: string }>, res: Response) => {
+export const deletarAluguel = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
   try {
     const aluguel = await AluguelModel.findByPk(req.params.id);
     if (!aluguel) {
@@ -112,26 +126,34 @@ export const deletarAluguel = async (req: Request<{ id: string }>, res: Response
   }
 };
 
-// Obter todos os aluguéis
+// rota para obter todos os aluguéis
 export const obterAlugueis = async (req: Request, res: Response) => {
   try {
-    const aluguéis = await AluguelModel.findAll({
+    const { veiculo_id, usuario_id } = req.query;
+
+    const where: any = {};
+    if (veiculo_id) where.veiculo_id = veiculo_id;
+    if (usuario_id) where.usuario_id = usuario_id;
+
+    const alugueis = await AluguelModel.findAll({
+      where,
       include: [
         {
           model: UsuarioModel,
           as: "usuario",
-          attributes: ["id", "nome", "email"]
+          attributes: ["id", "nome", "email"],
         },
         {
           model: VeiculosModel,
           as: "veiculo",
-          attributes: ["id", "marca", "modelo", "placa", "imagem", "nome"] // Adiciona imagem e nome
-        }
-      ]
+          attributes: ["id", "marca", "modelo", "placa", "imagem"],
+        },
+      ],
     });
 
-    res.status(200).json(aluguéis);
+    res.status(200).json(alugueis);
   } catch (error) {
-    res.status(500).json({ error: "Erro ao buscar aluguéis: " + error });
+    console.error("Erro ao buscar aluguéis:", error);
+    res.status(500).json({ error: "Erro ao buscar aluguéis" });
   }
 };

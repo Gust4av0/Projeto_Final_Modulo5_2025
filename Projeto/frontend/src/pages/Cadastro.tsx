@@ -18,37 +18,37 @@ function Cadastro() {
     e.preventDefault();
     setError("");
     setSuccess("");
-  
+
     if (!name || !email || !cpf || !password || !confirmPassword) {
       setError("Preencha todos os campos!");
       return;
     }
-  
+
     // Validação de e-mail mais robusta com regex simples
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("E-mail inválido!");
       return;
     }
-  
+
     // Validação de CPF (11 números)
     const cpfNumeros = cpf.replace(/\D/g, ""); // remove caracteres não numéricos
     if (cpfNumeros.length !== 11) {
       setError("CPF inválido! Deve conter 11 números.");
       return;
     }
-  
+
     // Validação de senha
     if (password.length < 6) {
       setError("A senha deve ter pelo menos 6 caracteres.");
       return;
     }
-  
+
     if (password !== confirmPassword) {
       setError("As senhas não coincidem!");
       return;
     }
-  
+
     try {
       const response = await axios.post("http://localhost:3000/usuarios", {
         nome: name,
@@ -56,10 +56,11 @@ function Cadastro() {
         cpf: cpfNumeros,
         senha: password,
       });
-    
+
       if (response.status === 201) {
         navigate("/"); // Redireciona para a tela de login após cadastro
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Erro ao cadastrar:", error);
       if (error.response && error.response.data && error.response.data.error) {
@@ -69,7 +70,7 @@ function Cadastro() {
       }
     }
   };
-  
+
   return (
     <div
       className="cadastro-container"

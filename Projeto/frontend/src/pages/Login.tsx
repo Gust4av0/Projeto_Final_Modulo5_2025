@@ -54,7 +54,7 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
           <div className="input-group">
             <input
               type="text"
-              placeholder="E-mail ou CPF"
+              placeholder="E-mail"
               value={emailOuCpf}
               onChange={(e) => setEmailOuCpf(e.target.value)}
               className="input-grande"
@@ -74,9 +74,9 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
           </button>
         </form>
 
-        <Link to="/esqueci-senha" className="forgot-password">
+        {/* <Link to="/esqueci-senha" className="forgot-password">
           Esqueci minha senha
-        </Link>
+        </Link> */}
 
         <Link to="/cadastro" className="signup-link">
           Criar uma conta

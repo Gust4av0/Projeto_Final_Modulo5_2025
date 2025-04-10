@@ -1,3 +1,4 @@
+import type React from "react";
 import { useState, useEffect, useCallback } from "react";
 import "../styles/Veiculos.css";
 import {
@@ -6,12 +7,11 @@ import {
   FiTag,
   FiCalendar,
   FiDollarSign,
+  FiPlus,
+  FiRefreshCw,
 } from "react-icons/fi";
 import api from "../services/api";
 import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-const MySwal = withReactContent(Swal);
-
 
 export interface Veiculo {
   id: number;
@@ -149,7 +149,8 @@ const Veiculos = () => {
       limparFiltros();
     } catch (error: unknown) {
       const mensagem =
-        (error as any)?.response?.data?.error || "Erro ao salvar veículo!";
+        (error as { response?: { data?: { error?: string } } })?.response?.data
+          ?.error || "Erro ao salvar veículo!";
       Swal.fire("Erro", mensagem, "error");
     }
   };
@@ -184,43 +185,84 @@ const Veiculos = () => {
         const data_fim = (
           document.getElementById("data-fim") as HTMLInputElement
         ).value;
-  
+
         if (!data_inicio || !data_fim) {
           Swal.showValidationMessage("Preencha as duas datas!");
           return;
         }
-  
+
         return { data_inicio, data_fim };
       },
     });
-  
+
     if (!formValues) return;
-  
+
     try {
-      // Aqui, supondo que você tem o ID do usuário logado
-      const usuario_id = localStorage.getItem("usuario_id"); // Exemplo
-  
+      const usuario_id = localStorage.getItem("usuario_id");
+
       if (!usuario_id) {
         Swal.fire("Erro", "Usuário não logado!", "error");
         return;
       }
-  
+
       await api.post("/alugueis", {
         veiculo_id: veiculoId,
         usuario_id: Number(usuario_id),
         data_inicio: formValues.data_inicio,
         data_fim: formValues.data_fim,
       });
-  
+
       Swal.fire("Sucesso", "Veículo alugado com sucesso!", "success");
       obterVeiculos();
-    } catch (error: any) {
-      const msg = error.response?.data?.error || "Erro ao alugar o veículo!";
+    } catch (error: unknown) {
+      const msg =
+        (error as { response?: { data?: { error?: string } } })?.response?.data
+          ?.error || "Erro ao alugar o veículo!";
       Swal.fire("Erro", msg, "error");
     }
   };
-  
-  
+
+  const cancelarAluguel = async (veiculoId: number) => {
+    try {
+      const usuario_id = localStorage.getItem("usuario_id");
+      if (!usuario_id) {
+        Swal.fire("Erro", "Usuário não logado!", "error");
+        return;
+      }
+      const result = await Swal.fire({
+        title: "Cancelar Aluguel",
+        text: "Você deseja cancelar este aluguel?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sim, cancelar",
+        cancelButtonText: "Não",
+      });
+
+      if (!result.isConfirmed) return;
+      const response = await api.get("/alugueis", {
+        params: {
+          veiculo_id: veiculoId,
+          usuario_id: usuario_id,
+        },
+      });
+
+      if (!response.data || response.data.length === 0) {
+        throw new Error("Nenhum aluguel encontrado");
+      }
+
+      const aluguel = response.data[0];
+      await api.delete(`/alugueis/${aluguel.id}`);
+
+      await obterVeiculos();
+      Swal.fire("Sucesso", "Aluguel cancelado com sucesso!", "success");
+    } catch (error: unknown) {
+      console.error("Erro ao cancelar aluguel:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro ao cancelar aluguel";
+      Swal.fire("Erro", errorMessage, "error");
+    }
+  };
+
   const formatarPlaca = (placa: string) => {
     return placa.toUpperCase().replace(/(\w{3})(\w{4})/, "$1-$2");
   };
@@ -302,62 +344,68 @@ const Veiculos = () => {
         </div>
       </div>
 
-      <div className="veiculos-card-container">
+      <div className="rent-veiculos-grid">
         {veiculos.map((veiculo) => (
-          <div className="veiculo-card" key={veiculo.id}>
-            <div className="veiculo-card-header">
+          <div className="rent-veiculo-card" key={veiculo.id}>
+            <div className="rent-veiculo-header">
               <h3>
                 {veiculo.marca} {veiculo.modelo}
               </h3>
-              <div className="veiculo-categoria">
+              <div className="rent-veiculo-categoria">
                 Categoria: {veiculo.categoria?.nome || "-"}
               </div>
-              <div className="veiculo-categoria">
+              <div className="rent-veiculo-categoria">
                 Locadora: {veiculo.locadora?.nome || "-"}
               </div>
             </div>
-            
+
             <img
-              className="veiculo-imagem"
-              src={veiculo.imagem}
+              className="rent-veiculo-imagem"
+              src={veiculo.imagem || "/placeholder.svg"}
               alt={veiculo.modelo}
             />
 
-            <div className="veiculo-card-footer">
-              <div className="veiculo-linha">
+            <div className="rent-veiculo-footer">
+              <div className="rent-veiculo-linha">
                 <FiTag /> <span>Placa: {formatarPlaca(veiculo.placa)}</span>
               </div>
-              <div className="veiculo-linha">
+              <div className="rent-veiculo-linha">
                 <FiCalendar /> <span>Ano: {veiculo.ano}</span>
               </div>
-              <div className="veiculo-linha">
+              <div className="rent-veiculo-linha">
                 <FiDollarSign />{" "}
                 <span>Diária: R$ {veiculo.preco_por_dia.toFixed(2)}</span>
               </div>
-              <div className="acoes-container">
-                <div className="acoes">
+              <div className="rent-acoes-container">
+                <div className="rent-acoes">
                   <button
-                    className="btn-acao"
+                    className="rent-btn-acao"
                     title="Editar"
                     onClick={() => editarVeiculo(veiculo)}
                   >
-                    <FiEdit className="icon-edit" />
+                    <FiEdit className="rent-icon-edit" />
                   </button>
                   <button
-                    className="btn-acao"
+                    className="rent-btn-acao"
                     title="Excluir"
                     onClick={() => deletarVeiculo(veiculo.id)}
                   >
-                    <FiTrash className="icon-trash" />
+                    <FiTrash className="rent-icon-trash" />
                   </button>
                 </div>
                 <button
-  className={veiculo.alugado ? 'botao-cancelar' : 'botao-alugar'}
-  onClick={() => alugarVeiculo(veiculo.id)}
-  disabled={veiculo.alugado}
->
-  {veiculo.alugado ? 'Cancelar Aluguel' : 'Alugar'}
-</button>
+                  className={
+                    veiculo.alugado ? "rent-btn-cancelar" : "rent-btn-alugar"
+                  }
+                  onClick={() =>
+                    veiculo.alugado
+                      ? cancelarAluguel(veiculo.id)
+                      : alugarVeiculo(veiculo.id)
+                  }
+                  disabled={false}
+                >
+                  {veiculo.alugado ? "Cancelar Aluguel" : "Alugar"}
+                </button>
               </div>
             </div>
           </div>

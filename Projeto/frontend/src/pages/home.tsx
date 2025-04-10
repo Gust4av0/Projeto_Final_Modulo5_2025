@@ -7,7 +7,6 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Verificar se o usuário está autenticado
     const token = localStorage.getItem("token");
     const nomeSalvo = localStorage.getItem("nomeUsuario");
 

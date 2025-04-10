@@ -78,7 +78,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
         return;
       }
 
-      const data: Record<string, any> = { nome };
+      const data: Record<string, string> = { nome };
 
       if (novaSenha) {
         if (!senhaAtual) {
@@ -110,6 +110,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
         const response = await api.put(`/usuarios/${userId}`, data);
 
         if (response.status === 200) {
+          // Este trecho não será executado se o status for 204
           setUser({ nome, email: email || "" });
           localStorage.setItem("nomeUsuario", nome);
 
@@ -124,6 +125,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
           setNovaSenha("");
           setConfirmarSenha("");
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (apiError: any) {
         console.error("Erro na API:", apiError);
         const mensagem =
@@ -136,6 +138,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
           confirmButtonColor: "#dc3545",
         });
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Erro geral:", error);
       Swal.fire({
@@ -144,6 +147,47 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
         text: "Ocorreu um erro inesperado. Tente novamente mais tarde.",
         confirmButtonColor: "#dc3545",
       });
+    }
+  };
+
+  const deletarConta = async () => {
+    const userId = localStorage.getItem("usuario_id");
+    if (!userId) {
+      Swal.fire("Erro", "ID do usuário não encontrado.", "error");
+      return;
+    }
+    const confirmar = await Swal.fire({
+      title: "Tem certeza?",
+      text: "Esta ação não pode ser desfeita.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, deletar conta",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#dc3545",
+    });
+    if (confirmar.isConfirmed) {
+      try {
+        await api.delete(`/usuarios/${userId}`);
+        setUser({ nome: "", email: "" });
+        Swal.fire({
+          icon: "success",
+          title: "Conta deletada!",
+          text: "Sua conta foi deletada com sucesso.",
+          confirmButtonColor: "#28a745",
+          allowOutsideClick: false,
+        }).then(() => {
+          localStorage.clear();
+          window.location.href = "/login";
+        });
+      } catch (error) {
+        console.error("Erro ao deletar conta:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Erro!",
+          text: "Não foi possível deletar sua conta. Tente novamente mais tarde.",
+          confirmButtonColor: "#dc3545",
+        });
+      }
     }
   };
 
@@ -223,7 +267,12 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
             </div>
           </form>
         )}
-      </div>
+              <div className="container-botao-deletar">
+            <button className="botao-deletar" onClick={deletarConta}>
+              Deletar Conta
+            </button>
+          </div>
+    </div>
     </div>
   );
 }
