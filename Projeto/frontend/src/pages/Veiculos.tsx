@@ -1,4 +1,3 @@
-import type React from "react";
 import { useState, useEffect, useCallback } from "react";
 import "../styles/Veiculos.css";
 import {
@@ -7,8 +6,6 @@ import {
   FiTag,
   FiCalendar,
   FiDollarSign,
-  FiPlus,
-  FiRefreshCw,
 } from "react-icons/fi";
 import api from "../services/api";
 import Swal from "sweetalert2";
@@ -56,7 +53,8 @@ const Veiculos = () => {
   const [locadoras, setLocadoras] = useState<{ id: number; nome: string }[]>(
     []
   );
-
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const itensPorPagina = 4;
   const obterCategoriasELocadoras = useCallback(async () => {
     try {
       const [categoriasResponse, locadorasResponse] = await Promise.all([
@@ -74,10 +72,15 @@ const Veiculos = () => {
     try {
       const response = await api.get("/veiculos");
       setVeiculos(response.data);
+      // Se estiver na última página e for excluir o último item, volta para a anterior
+      const totalPaginas = Math.ceil(response.data.length / itensPorPagina);
+      if (paginaAtual > totalPaginas) {
+        setPaginaAtual((prev) => (prev > 1 ? prev - 1 : 1));
+      }
     } catch {
       Swal.fire("Erro", "Erro ao carregar veículos!", "error");
     }
-  }, []);
+  }, [paginaAtual]);
 
   useEffect(() => {
     obterVeiculos();
@@ -103,7 +106,6 @@ const Veiculos = () => {
       locadora: "",
     });
   };
-
   const deletarVeiculo = async (id: number) => {
     const confirmacao = await Swal.fire({
       title: "Tem certeza?",
@@ -119,7 +121,13 @@ const Veiculos = () => {
     try {
       await api.delete(`/veiculos/${id}`);
       Swal.fire("Sucesso", "Veículo excluído com sucesso!", "success");
-      obterVeiculos();
+      const novaLista = veiculos.filter((v) => v.id !== id);
+      setVeiculos(novaLista);
+      if (novaLista.length === 0 && paginaAtual > 1) {
+        setPaginaAtual((prev) => prev - 1);
+      } else {
+        obterVeiculos();
+      }
     } catch {
       Swal.fire("Erro", "Erro ao excluir veículo!", "error");
     }
@@ -145,6 +153,7 @@ const Veiculos = () => {
         await api.post("/veiculos", veiculoData);
         Swal.fire("Sucesso", "Veículo cadastrado com sucesso!", "success");
       }
+
       obterVeiculos();
       limparFiltros();
     } catch (error: unknown) {
@@ -168,13 +177,12 @@ const Veiculos = () => {
       locadora: veiculo.locadora ? String(veiculo.locadora.id) : "",
     });
   };
-
   const alugarVeiculo = async (veiculoId: number) => {
     const { value: formValues } = await Swal.fire({
       title: "Alugar Veículo",
       html:
-        '<label>Data Início</label><input id="data-inicio" type="date" class="swal2-input">' +
-        '<label>Data Fim</label><input id="data-fim" type="date" class="swal2-input">',
+        '<label style="color:red;">Data Início</label><input id="data-inicio" type="date" class="swal2-input">' +
+        '<label style="color:red;">Data Fim</label><input id="data-fim" type="date" class="swal2-input">',
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Alugar",
@@ -199,7 +207,6 @@ const Veiculos = () => {
 
     try {
       const usuario_id = localStorage.getItem("usuario_id");
-
       if (!usuario_id) {
         Swal.fire("Erro", "Usuário não logado!", "error");
         return;
@@ -223,43 +230,26 @@ const Veiculos = () => {
   };
 
   const cancelarAluguel = async (veiculoId: number) => {
+    const confirmacao = await Swal.fire({
+      title: "Cancelar Aluguel",
+      text: "Tem certeza que deseja cancelar o aluguel deste veículo?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, cancelar",
+      cancelButtonText: "Voltar",
+    });
+
+    if (!confirmacao.isConfirmed) return;
+
     try {
-      const usuario_id = localStorage.getItem("usuario_id");
-      if (!usuario_id) {
-        Swal.fire("Erro", "Usuário não logado!", "error");
-        return;
-      }
-      const result = await Swal.fire({
-        title: "Cancelar Aluguel",
-        text: "Você deseja cancelar este aluguel?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sim, cancelar",
-        cancelButtonText: "Não",
-      });
-
-      if (!result.isConfirmed) return;
-      const response = await api.get("/alugueis", {
-        params: {
-          veiculo_id: veiculoId,
-          usuario_id: usuario_id,
-        },
-      });
-
-      if (!response.data || response.data.length === 0) {
-        throw new Error("Nenhum aluguel encontrado");
-      }
-
-      const aluguel = response.data[0];
-      await api.delete(`/alugueis/${aluguel.id}`);
-
-      await obterVeiculos();
-      Swal.fire("Sucesso", "Aluguel cancelado com sucesso!", "success");
+      await api.post(`/alugueis/cancelar/${veiculoId}`);
+      Swal.fire("Cancelado", "Aluguel cancelado com sucesso!", "success");
+      obterVeiculos();
     } catch (error: unknown) {
-      console.error("Erro ao cancelar aluguel:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Erro ao cancelar aluguel";
-      Swal.fire("Erro", errorMessage, "error");
+      const msg =
+        (error as { response?: { data?: { error?: string } } })?.response?.data
+          ?.error || "Erro ao cancelar aluguel!";
+      Swal.fire("Erro", msg, "error");
     }
   };
 
@@ -267,6 +257,10 @@ const Veiculos = () => {
     return placa.toUpperCase().replace(/(\w{3})(\w{4})/, "$1-$2");
   };
 
+  const indexInicial = (paginaAtual - 1) * itensPorPagina;
+  const indexFinal = paginaAtual * itensPorPagina;
+  const veiculosPaginados = veiculos.slice(indexInicial, indexFinal);
+  const totalPaginas = Math.ceil(veiculos.length / itensPorPagina);
   return (
     <div className="veiculos-container">
       <h1 className="titulo-filtro">Veículos</h1>
@@ -344,73 +338,91 @@ const Veiculos = () => {
         </div>
       </div>
 
-      <div className="rent-veiculos-grid">
-        {veiculos.map((veiculo) => (
-          <div className="rent-veiculo-card" key={veiculo.id}>
-            <div className="rent-veiculo-header">
+      <div className="veiculos-card-container">
+        {veiculosPaginados.map((veiculo) => (
+          <div className="veiculo-card" key={veiculo.id}>
+            <div className="veiculo-card-header">
               <h3>
                 {veiculo.marca} {veiculo.modelo}
               </h3>
-              <div className="rent-veiculo-categoria">
+              <div className="veiculo-categoria">
                 Categoria: {veiculo.categoria?.nome || "-"}
               </div>
-              <div className="rent-veiculo-categoria">
+              <div className="veiculo-categoria">
                 Locadora: {veiculo.locadora?.nome || "-"}
               </div>
             </div>
-
             <img
-              className="rent-veiculo-imagem"
-              src={veiculo.imagem || "/placeholder.svg"}
+              className="veiculo-imagem"
+              src={veiculo.imagem}
               alt={veiculo.modelo}
             />
-
-            <div className="rent-veiculo-footer">
-              <div className="rent-veiculo-linha">
+            <div className="veiculo-card-footer">
+              <div className="veiculo-linha">
                 <FiTag /> <span>Placa: {formatarPlaca(veiculo.placa)}</span>
               </div>
-              <div className="rent-veiculo-linha">
+              <div className="veiculo-linha">
                 <FiCalendar /> <span>Ano: {veiculo.ano}</span>
               </div>
-              <div className="rent-veiculo-linha">
+              <div className="veiculo-linha">
                 <FiDollarSign />{" "}
                 <span>Diária: R$ {veiculo.preco_por_dia.toFixed(2)}</span>
               </div>
-              <div className="rent-acoes-container">
-                <div className="rent-acoes">
-                  <button
-                    className="rent-btn-acao"
-                    title="Editar"
-                    onClick={() => editarVeiculo(veiculo)}
-                  >
-                    <FiEdit className="rent-icon-edit" />
-                  </button>
-                  <button
-                    className="rent-btn-acao"
-                    title="Excluir"
-                    onClick={() => deletarVeiculo(veiculo.id)}
-                  >
-                    <FiTrash className="rent-icon-trash" />
-                  </button>
-                </div>
+              <div className="acoes">
                 <button
-                  className={
-                    veiculo.alugado ? "rent-btn-cancelar" : "rent-btn-alugar"
-                  }
-                  onClick={() =>
-                    veiculo.alugado
-                      ? cancelarAluguel(veiculo.id)
-                      : alugarVeiculo(veiculo.id)
-                  }
-                  disabled={false}
+                  className="btn-acao"
+                  title="Editar"
+                  onClick={() => editarVeiculo(veiculo)}
                 >
-                  {veiculo.alugado ? "Cancelar Aluguel" : "Alugar"}
+                  <FiEdit className="icon-edit" />
+                </button>
+                <button
+                  className="btn-acao"
+                  title="Excluir"
+                  onClick={() => deletarVeiculo(veiculo.id)}
+                >
+                  <FiTrash className="icon-trash" />
                 </button>
               </div>
+              {veiculo.alugado ? (
+                <button
+                  className="botao-cancelar"
+                  onClick={() => cancelarAluguel(veiculo.id)}
+                >
+                  Cancelar Aluguel
+                </button>
+              ) : (
+                <button
+                  className="botao-alugar"
+                  onClick={() => alugarVeiculo(veiculo.id)}
+                >
+                  Alugar
+                </button>
+              )}
             </div>
           </div>
         ))}
       </div>
+
+      {totalPaginas > 1 && (
+        <div className="paginacao">
+          <button
+            onClick={() => setPaginaAtual(paginaAtual - 1)}
+            disabled={paginaAtual === 1}
+          >
+            Anterior
+          </button>
+          <span>
+            Página {paginaAtual} de {totalPaginas}
+          </span>
+          <button
+            onClick={() => setPaginaAtual(paginaAtual + 1)}
+            disabled={paginaAtual === totalPaginas}
+          >
+            Próxima
+          </button>
+        </div>
+      )}
     </div>
   );
 };

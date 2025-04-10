@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import api from "../services/api";
 import Swal from "sweetalert2";
 import "../styles/MinhaConta.css";
+import { FaEye, FaEyeSlash, FaTimes } from "react-icons/fa";
 
 interface MinhaContaProps {
   user: {
@@ -19,6 +20,12 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [carregando, setCarregando] = useState(true);
   const apiCallMade = useRef(false);
+
+  const [showSenhaAtual, setShowSenhaAtual] = useState(false);
+  const [showNovaSenha, setShowNovaSenha] = useState(false);
+  const [showConfirmarSenha, setShowConfirmarSenha] = useState(false);
+  const [tentouSalvar, setTentouSalvar] = useState(false);
+  const [forcaSenha, setForcaSenha] = useState("");
 
   useEffect(() => {
     setNome(user?.nome || "");
@@ -62,8 +69,22 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
     };
   }, [user, setUser]);
 
+  const verificarForcaSenha = (senha: string): string => {
+    let forca = 0;
+    if (senha.length >= 6) forca++;
+    if (/[A-Z]/.test(senha)) forca++;
+    if (/[a-z]/.test(senha)) forca++;
+    if (/\d/.test(senha)) forca++;
+    if (/[@$!%*?&]/.test(senha)) forca++;
+
+    if (forca <= 2) return "fraca";
+    if (forca <= 4) return "media";
+    return "forte";
+  };
+
   const atualizarPerfil = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTentouSalvar(true);
 
     try {
       const userId = localStorage.getItem("usuario_id");
@@ -106,41 +127,26 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
         data.senha = novaSenha;
       }
 
-      try {
-        const response = await api.put(`/usuarios/${userId}`, data);
+      const response = await api.put(`/usuarios/${userId}`, data);
 
-        if (response.status === 200) {
-          // Este trecho não será executado se o status for 204
-          setUser({ nome, email: email || "" });
-          localStorage.setItem("nomeUsuario", nome);
+      if (response.status === 200) {
+        setUser({ nome, email: email || "" });
+        localStorage.setItem("nomeUsuario", nome);
 
-          Swal.fire({
-            icon: "success",
-            title: "Sucesso!",
-            text: "Perfil atualizado com sucesso!",
-            confirmButtonColor: "#28a745",
-          });
-
-          setSenhaAtual("");
-          setNovaSenha("");
-          setConfirmarSenha("");
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (apiError: any) {
-        console.error("Erro na API:", apiError);
-        const mensagem =
-          apiError.response?.data?.error ||
-          "Não foi possível atualizar o perfil. Verifique os dados e tente novamente.";
         Swal.fire({
-          icon: "error",
-          title: "Erro!",
-          text: mensagem,
-          confirmButtonColor: "#dc3545",
+          icon: "success",
+          title: "Sucesso!",
+          text: "Perfil atualizado com sucesso!",
+          confirmButtonColor: "#28a745",
         });
+
+        setSenhaAtual("");
+        setNovaSenha("");
+        setConfirmarSenha("");
+        setTentouSalvar(false);
+        setForcaSenha("");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error("Erro geral:", error);
       Swal.fire({
         icon: "error",
         title: "Erro!",
@@ -149,7 +155,6 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
       });
     }
   };
-
   const deletarConta = async () => {
     const userId = localStorage.getItem("usuario_id");
     if (!userId) {
@@ -191,10 +196,21 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
     }
   };
 
+  const limparSenhaAtual = () => {
+    setSenhaAtual(""); // Limpa o campo de senha atual
+  };
+
+  const limparNovaSenha = () => {
+    setNovaSenha(""); // Limpa o campo de nova senha
+  };
+
+  const limparConfirmarSenha = () => {
+    setConfirmarSenha(""); // Limpa o campo de confirmar senha
+  };
+
   return (
     <div className="container-minha-conta">
       <h1>Minha Conta</h1>
-
       <div className="container-formulario">
         {carregando ? (
           <div className="container-carregando">
@@ -229,35 +245,91 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
 
             <div className="secao-senha">
               <h2>Alterar Senha</h2>
-              <div className="grupo-formulario">
+
+              <div className="grupo-formulario input-wrapper">
                 <label htmlFor="senhaAtual">Senha Atual</label>
                 <input
-                  type="password"
+                  type={showSenhaAtual ? "text" : "password"}
                   id="senhaAtual"
                   value={senhaAtual}
                   onChange={(e) => setSenhaAtual(e.target.value)}
                 />
+                <button
+                  type="button"
+                  className="toggle-password-conta"
+                  onClick={() => setShowSenhaAtual(!showSenhaAtual)}
+                >
+                  {showSenhaAtual ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                <button
+                  type="button"
+                  className="clear-password"
+                  onClick={limparSenhaAtual}
+                >
+                  <FaTimes />
+                </button>
               </div>
 
-              <div className="grupo-formulario">
+              <div className="grupo-formulario input-wrapper">
                 <label htmlFor="novaSenha">Nova Senha</label>
                 <input
-                  type="password"
+                  type={showNovaSenha ? "text" : "password"}
                   id="novaSenha"
                   value={novaSenha}
-                  onChange={(e) => setNovaSenha(e.target.value)}
+                  onChange={(e) => {
+                    const nova = e.target.value;
+                    setNovaSenha(nova);
+                    setForcaSenha(verificarForcaSenha(nova));
+                  }}
                 />
+                <button
+                  type="button"
+                  className="toggle-password-conta"
+                  onClick={() => setShowNovaSenha(!showNovaSenha)}
+                >
+                  {showNovaSenha ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                <button
+                  type="button"
+                  className="clear-password"
+                  onClick={limparNovaSenha}
+                >
+                  <FaTimes />
+                </button>
               </div>
 
-              <div className="grupo-formulario">
+              <div className="grupo-formulario input-wrapper">
                 <label htmlFor="confirmarSenha">Confirmar Nova Senha</label>
                 <input
-                  type="password"
+                  type={showConfirmarSenha ? "text" : "password"}
                   id="confirmarSenha"
                   value={confirmarSenha}
                   onChange={(e) => setConfirmarSenha(e.target.value)}
                 />
+                <button
+                  type="button"
+                  className="toggle-password-conta"
+                  onClick={() => setShowConfirmarSenha(!showConfirmarSenha)}
+                >
+                  {showConfirmarSenha ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                <button
+                  type="button"
+                  className="clear-password"
+                  onClick={limparConfirmarSenha}
+                >
+                  <FaTimes />
+                </button>
               </div>
+
+              {novaSenha && (
+                <p className={`password-strength ${forcaSenha}`}>
+                  Força da senha: {forcaSenha.toUpperCase()}
+                </p>
+              )}
+              {tentouSalvar && novaSenha !== confirmarSenha && (
+                <p className="senha-nao-coincide">As senhas não coincidem</p>
+              )}
             </div>
 
             <div className="acoes-formulario">
@@ -267,12 +339,12 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
             </div>
           </form>
         )}
-              <div className="container-botao-deletar">
-            <button className="botao-deletar" onClick={deletarConta}>
-              Deletar Conta
-            </button>
-          </div>
-    </div>
+        <div className="container-botao-deletar">
+          <button className="botao-deletar" onClick={deletarConta}>
+            Deletar Conta
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

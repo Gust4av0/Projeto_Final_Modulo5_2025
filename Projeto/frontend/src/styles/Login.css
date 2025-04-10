@@ -45,6 +45,7 @@ h1 {
 
 .input-group {
   margin-bottom: 15px;
+  position: relative;
 }
 
 input {
@@ -121,4 +122,44 @@ input {
   color: red;
   font-size: 14px;
   margin-bottom: 10px;
+}
+
+.toggle-password-login {
+  background: none;
+  border: none;
+  position: absolute;
+  right: 15px;
+  top: 60%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: black;
+  font-size: 18px;
+}
+/* Esses estilos são mantidos para compatibilidade com padrões anteriores */
+.password-strength {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.password-strength.fraca {
+  color: red;
+}
+
+.password-strength.media {
+  color: yellow;
+}
+
+.password-strength.forte {
+  color: #28a745;
+}
+
+.senha-nao-coincide {
+  color: red;
+  font-size: 13px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  text-align: center;
 }

@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .container-minha-conta {
   max-width: 1200px;
   width: 50%;
@@ -22,6 +28,7 @@
 
 .grupo-formulario {
   margin-bottom: 15px;
+  position: relative;
 }
 
 .grupo-formulario label {
@@ -47,12 +54,10 @@
   cursor: not-allowed;
 }
 
-/* Estilo para destacar o campo de email */
 .campo-email {
   background-color: #232330 !important;
   border-color: #333 !important;
   opacity: 0.9;
-  /* Para parecer menos "desabilitado" */
 }
 
 .nota-email {
@@ -75,7 +80,6 @@
   font-size: 16px;
 }
 
-/* Estilo para o indicador de carregamento */
 .container-carregando {
   display: flex;
   justify-content: center;
@@ -84,7 +88,6 @@
   color: #ddd;
 }
 
-/* Melhor indicador de carregamento */
 .spinner-carregando {
   border: 3px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
@@ -99,7 +102,6 @@
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }
@@ -126,17 +128,14 @@
   background-color: #ffcc00;
 }
 
-/* Mantendo as classes antigas para compatibilidade */
-.minha-conta-container,
-.user-account-container {
+.minha-conta-container {
   max-width: 900px;
   margin: 20px auto;
   padding: 15px;
   color: white;
 }
 
-.form-container,
-.user-form-container {
+.form-container {
   background-color: #1e1e2f;
   padding: 40px;
   border-radius: 8px;
@@ -145,20 +144,17 @@
   margin: 0 auto;
 }
 
-.form-group,
-.user-form-group {
+.form-group {
   margin-bottom: 15px;
 }
 
-.form-section,
-.user-password-section {
+.form-section {
   margin-top: 20px;
   padding-top: 15px;
   border-top: 1px solid #444;
 }
 
-.loading-container,
-.user-loading-container {
+.loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -166,14 +162,12 @@
   color: #ddd;
 }
 
-.form-actions,
-.user-form-actions {
+.form-actions {
   margin-top: 20px;
   text-align: center;
 }
 
-.btn-salvar,
-.user-save-btn {
+.btn-salvar {
   background-color: yellow;
   color: black;
   font-weight: bold;
@@ -184,7 +178,6 @@
   font-size: 14px;
   transition: background-color 0.3s;
 }
-
 
 .container-botao-deletar {
   display: flex;
@@ -205,4 +198,59 @@
 
 .botao-deletar:hover {
   background-color: #c82333;
+}
+
+.toggle-password-conta {
+  position: absolute;
+  right: 10px;
+  top: 73%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 18px;
+  z-index: 2;
+}
+.clear-password {
+  background: none;
+  border: none;
+  position: absolute;
+  right: 45px;
+  top: 73%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #bbb;
+  font-size: 18px;
+}
+.clear-password:hover {
+  color: red; /* Altera a cor do ícone para vermelho quando o usuário passar o mouse sobre o botão */
+}
+
+.password-strength {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.password-strength.fraca {
+  color: red;
+}
+
+.password-strength.media {
+  color: yellow;
+}
+
+.password-strength.forte {
+  color: #28a745;
+}
+
+.senha-nao-coincide {
+  color: red;
+  font-size: 13px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  text-align: center;
 }

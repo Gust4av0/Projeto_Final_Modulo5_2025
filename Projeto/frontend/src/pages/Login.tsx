@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import "../styles/Login.css";
 import api from "../services/api";
 import { AxiosError } from "axios";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 type UserType = {
   nome: string;
@@ -13,6 +13,7 @@ type UserType = {
 function Login({ setUser }: { setUser: (user: UserType) => void }) {
   const [emailOuCpf, setEmailOuCpf] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -46,7 +47,7 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
   return (
     <div className="login-container">
       <title>Login - Aluga Aí Zé</title>
-      <link rel="icon" type="image/png" href="../images/favicon.jpg"></link>
+      <link rel="icon" type="image/png" href="../images/favicon.jpg" />
       <div className="login-box">
         <h1>Login</h1>
         {error && <p className="error-message">{error}</p>}
@@ -54,7 +55,7 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
           <div className="input-group">
             <input
               type="text"
-              placeholder="E-mail"
+              placeholder="E-mail ou CPF"
               value={emailOuCpf}
               onChange={(e) => setEmailOuCpf(e.target.value)}
               className="input-grande"
@@ -62,21 +63,28 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
           </div>
           <div className="input-group">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input-grande"
             />
+            <button
+              type="button"
+              className="toggle-password-login"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <FaEyeSlash color="black" />
+              ) : (
+                <FaEye color="black" />
+              )}
+            </button>
           </div>
           <button type="submit" className="login-button pequeno">
             Entrar
           </button>
         </form>
-
-        {/* <Link to="/esqueci-senha" className="forgot-password">
-          Esqueci minha senha
-        </Link> */}
 
         <Link to="/cadastro" className="signup-link">
           Criar uma conta
