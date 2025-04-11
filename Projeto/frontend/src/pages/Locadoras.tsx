@@ -50,8 +50,10 @@ const Locadoras = () => {
       icon: "warning",
       title: "Confirmar exclusão",
       text: "Tem certeza que deseja excluir esta locadora?",
+      background: "#1e1e2f", // fundo escuro
+      color: "#ffffff",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
+      confirmButtonColor: "#cc0000",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Sim, excluir",
       cancelButtonText: "Cancelar",
@@ -82,10 +84,12 @@ const Locadoras = () => {
 
   return (
     <div className="locadoras-container">
-      <h1 className="titulo-filtro">Locadoras</h1>
-      <div className="filtro-botoes">
+      <div className="locadoras-overlay"></div>
+      <div className="locadoras-content">
+        <h1 className="locadoras-title">Locadoras</h1>
+        <div className="locadoras-filtro-botoes">
           <button
-            className="btn-adicionar"
+            className="locadoras-btn-adicionar"
             onClick={() => {
               setLocadoraEditando(null);
               setModalOpen(true);
@@ -94,55 +98,56 @@ const Locadoras = () => {
             Adicionar
           </button>
         </div>
-      <div className="locadoras-tabela-container">
-        <table className="locadoras-tabela">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Cidade</th>
-              <th>Estado</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {locadoras.map((locadora) => (
-              <tr key={locadora.id}>
-                <td>{locadora.nome}</td>
-                <td>{locadora.cidade}</td>
-                <td>{locadora.estado}</td>
-                <td className="acoes">
-                  <button
-                    className="btn-acao"
-                    title="Editar"
-                    onClick={() => {
-                      setLocadoraEditando(locadora);
-                      setModalOpen(true);
-                    }}
-                  >
-                    <FiEdit color="orange" />
-                  </button>
-                  <button
-                    className="btn-acao"
-                    title="Excluir"
-                    onClick={() => deletarLocadora(locadora.id)}
-                  >
-                    <FiTrash color="red" />
-                  </button>
-                </td>
+        <div className="locadoras-tabela-container">
+          <table className="locadoras-tabela">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {locadoras.map((locadora) => (
+                <tr key={locadora.id}>
+                  <td>{locadora.nome}</td>
+                  <td>{locadora.cidade}</td>
+                  <td>{locadora.estado}</td>
+                  <td className="locadoras-acoes">
+                    <button
+                      className="locadoras-btn-acao"
+                      title="Editar"
+                      onClick={() => {
+                        setLocadoraEditando(locadora);
+                        setModalOpen(true);
+                      }}
+                    >
+                      <FiEdit color="orange" />
+                    </button>
+                    <button
+                      className="locadoras-btn-acao"
+                      title="Excluir"
+                      onClick={() => deletarLocadora(locadora.id)}
+                    >
+                      <FiTrash color="red" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {modalOpen && (
-        <Modal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          atualizarLista={obterLocadoras}
-          locadora={locadoraEditando}
-        />
-      )}
+        {modalOpen && (
+          <Modal
+            isOpen={modalOpen}
+            onClose={() => setModalOpen(false)}
+            atualizarLista={obterLocadoras}
+            locadora={locadoraEditando}
+          />
+        )}
+      </div>
     </div>
   );
 };

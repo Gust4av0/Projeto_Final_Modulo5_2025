@@ -75,7 +75,7 @@
 }
 
 .btn-adicionar {
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: linear-gradient(135deg, #999999, #2980b9);
   color: white;
   padding: 12px 20px;
   border: none;
@@ -92,7 +92,7 @@
 }
 
 .btn-limpar {
-  background: linear-gradient(135deg, #f39c12, #d35400);
+  background: linear-gradient(135deg, #999999, #d35400);
   color: white;
   padding: 12px 20px;
   border: none;
@@ -216,7 +216,7 @@
   color: red;
 }
 .botao-alugar {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: linear-gradient(135deg, #999999, #27ae60);
   color: white;
   padding: 10px 20px;
   border: none;

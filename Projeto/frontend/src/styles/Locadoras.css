@@ -1,96 +1,79 @@
 .locadoras-container {
-  width: 90%;
-  margin: 20px auto;
-  color: white;
+  height: 100vh;
+  width: 100%;
+  background-image: url("../images/backgroundlocadoras.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  box-sizing: border-box;
 }
 
-/* TÍTULO PERMANENTE NO CANTO SUPERIOR ESQUERDO */
-.titulo-filtro {
-  text-align: left;
-  margin-bottom: 10px;
-  font-size: 20px;
-  font-weight: bold;
+.locadoras-overlay {
   position: absolute;
-  top: -40px;
+  top: 0;
   left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
 }
 
-/* FILTRO COM BOTÕES NO LADO DIREITO */
-.filtros {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #222;
-  padding: 12px;
-  border-radius: 15px;
-  border: 1px solid #666;
+.locadoras-content {
   position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1100px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 30px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
 }
 
-.filtro-inputs {
+/* Título da página */
+.locadoras-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffeb00;
+}
+
+/* Botões superiores */
+.locadoras-filtro-botoes {
   display: flex;
-  gap: 10px;
-  flex: 1;
+  justify-content: flex-end;
+  margin-bottom: 20px;
 }
 
-.filtro-inputs input {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #666;
-  border-radius: 5px;
-  background: #333;
+.locadoras-btn-adicionar {
+  background: #999999;
   color: white;
-}
-
-/* Espaçamento entre último input e botões */
-.filtro-inputs input:last-child {
-  margin-right: 20px;
-}
-
-.filtro-botoes {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/* Botão FILTRAR com cor roxa */
-.btn-buscar {
-  background: #6f42c1;
-  color: white;
-  padding: 10px 15px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
 }
 
-/* Botão ADICIONAR com cor azul */
-.btn-filtrar {
-  background: #007bff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Botão LIMPAR com cor laranja */
-.btn-limpar {
-  background: #ff8c00;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.locadoras-btn-adicionar:hover {
+  background: #0056b3;
 }
 
 /* ============================ TABELA ============================ */
 .locadoras-tabela-container {
-  margin-top: 20px;
   background: #222;
   padding: 12px;
   border-radius: 15px;
   border: 1px solid #666;
+  overflow-x: auto;
 }
 
 .locadoras-tabela {
@@ -100,7 +83,7 @@
 }
 
 .locadoras-tabela th {
-  background: #007bff;
+  background: #999999;
   color: white;
   padding: 12px;
   text-align: left;
@@ -129,12 +112,14 @@
 }
 
 /* BOTÕES DE AÇÃO */
-.acoes {
+.locadoras-acoes {
   display: flex;
+  justify-content: center; /* centraliza horizontalmente */
+  align-items: center; /* centraliza verticalmente */
   gap: 5px;
 }
 
-.btn-acao {
+.locadoras-btn-acao {
   background: white;
   border: none;
   padding: 7px;
@@ -143,6 +128,6 @@
   transition: 0.3s;
 }
 
-.btn-acao:hover {
+.locadoras-btn-acao:hover {
   background: rgba(255, 255, 255, 0.7);
 }

@@ -247,7 +247,11 @@ const Veiculos = () => {
         title: "Cancelar Aluguel",
         text: "Você deseja cancelar este aluguel?",
         icon: "warning",
+        background: "#1e1e2f", // fundo escuro
+        color: "#ffffff",
         showCancelButton: true,
+        confirmButtonColor: "#cc0000",
+        cancelButtonColor: "#3085d6",
         confirmButtonText: "Sim, cancelar",
         cancelButtonText: "Não",
       });

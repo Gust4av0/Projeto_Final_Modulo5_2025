@@ -20,11 +20,18 @@ function Home() {
 
   return (
     <div className="home-container">
-      <h1>
-        Olá, <span className="user-name">{nomeUsuario}</span>!
-      </h1>
-      <br />
-      <h2>Seja Bem Vindo ao sistema de Locações</h2>
+      <div className="home-overlay"></div>
+      <div className="home-content">
+        <h1>
+          Bem-vindo, <span className="user-name">{nomeUsuario}</span>!
+        </h1>
+        <p>
+          Prepare-se para viver a melhor experiência em aluguel de veículos.{" "}
+          <br />
+          Encontre o carro ideal para cada momento, com rapidez, segurança e
+          praticidade!
+        </p>
+      </div>
     </div>
   );
 }

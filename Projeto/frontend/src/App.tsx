@@ -65,7 +65,7 @@ function App() {
             setIsMinimized={setIsMinimized}
             user={user}
           />
-          <main style={{ flex: 1, padding: "10px", margin: 0 }}>
+          <main className="main-content">
             <Routes>
               <Route path="/" element={<Navigate to="/home" />} />
 

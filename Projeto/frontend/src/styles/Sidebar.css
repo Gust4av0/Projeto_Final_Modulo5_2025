@@ -9,7 +9,7 @@
 }
 
 .user-profile-button {
-  background-color: #007bff;
+  background-color: #aab4bf;
   /* Azul bonito */
   color: white;
   border: none;
@@ -38,7 +38,6 @@
   list-style: none;
   padding: 0;
 }
-
 
 .sidebar ul li {
   display: flex;
@@ -126,7 +125,6 @@
   padding-top: 75px;
   padding-left: 20px;
 }
-
 
 .sideBar {
   padding-top: 30px;

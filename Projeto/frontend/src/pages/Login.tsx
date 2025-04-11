@@ -15,10 +15,12 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setloading] = useState(false);
   const navigate = useNavigate();
 
   const realizarLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setloading(true);
     setError("");
 
     try {
@@ -37,10 +39,16 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
       localStorage.setItem("usuario_id", id);
 
       setUser({ nome, email: emailOuCpf });
-      navigate("/home");
+
+      // Aguardar 5 segundos com loading ativo antes de navegar
+      setTimeout(() => {
+        setloading(false);
+        navigate("/home");
+      }, 1);
     } catch (err: unknown) {
       const error = err as AxiosError<{ error: string }>;
       setError(error.response?.data?.error || "Erro ao fazer login!");
+      setloading(false);
     }
   };
 
@@ -48,6 +56,13 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
     <div className="login-container">
       <title>Login - Aluga Aí Zé</title>
       <link rel="icon" type="image/png" href="../images/favicon.jpg" />
+
+      {loading && (
+        <div className="overlay-loading">
+          <div className="spinner" />
+        </div>
+      )}
+
       <div className="login-box">
         <h1>Login</h1>
         {error && <p className="error-message">{error}</p>}
@@ -81,8 +96,12 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
               )}
             </button>
           </div>
-          <button type="submit" className="login-button pequeno">
-            Entrar
+          <button
+            type="submit"
+            className="login-button pequeno"
+            disabled={loading}
+          >
+            {!loading ? "entrar" : "carregando"}
           </button>
         </form>
 

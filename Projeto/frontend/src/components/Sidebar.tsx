@@ -20,6 +20,8 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
       title: "Tem certeza?",
       text: "Você será desconectado do sistema!",
       icon: "warning",
+      background: "#1e1e2f", // fundo escuro
+      color: "#ffffff",
       showCancelButton: true,
       confirmButtonColor: "#cc0000",
       cancelButtonColor: "#3085d6",
@@ -29,9 +31,9 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
       if (result.isConfirmed) {
         localStorage.clear();
         window.location.href = "/login";
-      }
-    });
-  };
+      }
+    });
+  };
 
   const handleMinhaConta = () => {
     navigate("/minha-conta");
@@ -59,48 +61,48 @@ function Sidebar({ isMinimized, setIsMinimized, user }: SidebarProps) {
         </div>
       )}
       <div className="sideBar">
-      <ul>
-        <div className="sideBarHome">
-        <li>
-          <NavLink to="/home">
-            <FiHome size={24} />
-            {!isMinimized && <span>Home</span>}
-          </NavLink>
-        </li>
-        </div>
-        {/* <li>
+        <ul>
+          <div className="sideBarHome">
+            <li>
+              <NavLink to="/home">
+                <FiHome size={24} />
+                {!isMinimized && <span>Home</span>}
+              </NavLink>
+            </li>
+          </div>
+          {/* <li>
           <NavLink to="/usuarios">
             <FiUsers size={24} />
             {!isMinimized && <span>Usuários</span>}
           </NavLink>
         </li> */}
-        <li>
-          <NavLink to="/locadoras">
-            <FiKey size={24} />
-            {!isMinimized && <span>Locadoras</span>}
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/categorias">
-            <FiLayers size={24} />
-            {!isMinimized && <span>Categorias</span>}
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/veiculos">
-            <FaCarRear size={24} />
-            {!isMinimized && <span>Veículos</span>}
-          </NavLink>
-        </li>
-      </ul>
+          <li>
+            <NavLink to="/locadoras">
+              <FiKey size={24} />
+              {!isMinimized && <span>Locadoras</span>}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/categorias">
+              <FiLayers size={24} />
+              {!isMinimized && <span>Categorias</span>}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/veiculos">
+              <FaCarRear size={24} />
+              {!isMinimized && <span>Veículos</span>}
+            </NavLink>
+          </li>
+        </ul>
       </div>
 
       <div className="button">
-      <button className="logout-button" onClick={handleLogout}>
-            <FaSignOutAlt size={30} />
-            {!isMinimized && <span>Sair</span>}
-          </button>
-          </div>
+        <button className="logout-button" onClick={handleLogout}>
+          <FaSignOutAlt size={30} />
+          {!isMinimized && <span>Sair</span>}
+        </button>
+      </div>
     </div>
   );
 }

@@ -38,7 +38,11 @@ const Categorias = () => {
       title: "Tem certeza?",
       text: "Deseja realmente excluir esta categoria?",
       icon: "warning",
+      background: "#1e1e2f", // fundo escuro
+      color: "#ffffff",
       showCancelButton: true,
+      confirmButtonColor: "#cc0000",
+      cancelButtonColor: "#3085d6",
       confirmButtonText: "Sim, excluir!",
       cancelButtonText: "Cancelar",
     });
@@ -60,10 +64,13 @@ const Categorias = () => {
 
   return (
     <div className="categorias-container">
-      <h1 className="titulo-filtro">Categorias</h1>
+      <div className="categorias-overlay"></div>
+      <div className="categorias-content">
+        <h1 className="categorias-title">Categorias</h1>
 
-      <button
-            className="btn-adicionar"
+        <div className="categorias-filtro-botoes">
+          <button
+            className="categorias-btn-adicionar"
             onClick={() => {
               setCategoriaEditando(null);
               setModalOpen(true);
@@ -71,52 +78,54 @@ const Categorias = () => {
           >
             Adicionar
           </button>
+        </div>
 
-      <div className="categorias-tabela-container">
-        <table className="categorias-tabela">
-          <thead>
-            <tr>
-              <th>Nome da Categoria</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categorias.map((categoria) => (
-              <tr key={categoria.id}>
-                <td>{categoria.nome}</td>
-                <td className="acoes">
-                  <button
-                    className="btn-acao"
-                    title="Editar"
-                    onClick={() => {
-                      setCategoriaEditando(categoria);
-                      setModalOpen(true);
-                    }}
-                  >
-                    <FiEdit color="orange" />
-                  </button>
-                  <button
-                    className="btn-acao"
-                    title="Excluir"
-                    onClick={() => deletarCategoria(categoria.id)}
-                  >
-                    <FiTrash color="red" />
-                  </button>
-                </td>
+        <div className="categorias-tabela-container">
+          <table className="categorias-tabela">
+            <thead>
+              <tr>
+                <th>Nome da Categoria</th>
+                <th>Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {categorias.map((categoria) => (
+                <tr key={categoria.id}>
+                  <td>{categoria.nome}</td>
+                  <td className="categorias-acoes">
+                    <button
+                      className="categorias-btn-acao"
+                      title="Editar"
+                      onClick={() => {
+                        setCategoriaEditando(categoria);
+                        setModalOpen(true);
+                      }}
+                    >
+                      <FiEdit color="orange" />
+                    </button>
+                    <button
+                      className="categorias-btn-acao"
+                      title="Excluir"
+                      onClick={() => deletarCategoria(categoria.id)}
+                    >
+                      <FiTrash color="red" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {modalOpen && (
-        <ModalCategoria
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          atualizarLista={obterCategorias}
-          categoria={categoriaEditando}
-        />
-      )}
+        {modalOpen && (
+          <ModalCategoria
+            isOpen={modalOpen}
+            onClose={() => setModalOpen(false)}
+            atualizarLista={obterCategorias}
+            categoria={categoriaEditando}
+          />
+        )}
+      </div>
     </div>
   );
 };
