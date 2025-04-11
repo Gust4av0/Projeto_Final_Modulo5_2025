@@ -291,6 +291,7 @@ const Veiculos = () => {
   const veiculosPaginados = veiculos.slice(indexInicial, indexFinal);
   const totalPaginas = Math.ceil(veiculos.length / itensPorPagina);
   return (
+    <div className="main">
     <div className="veiculos-container">
       <h1 className="titulo-filtro">Veículos</h1>
 
@@ -452,6 +453,7 @@ const Veiculos = () => {
           </button>
         </div>
       )}
+    </div>
     </div>
   );
 };

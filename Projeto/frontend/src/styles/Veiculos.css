@@ -1,3 +1,8 @@
+.main {
+  background-image: url("../images/fundoPadrao.png");
+
+}
+
 .veiculos-container {
   width: 95%;
   max-width: 1400px;
@@ -69,6 +74,7 @@
   outline: none;
   box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
 }
+
 .filtro-botoes {
   display: flex;
   gap: 15px;
@@ -135,6 +141,7 @@
 .veiculos-card-container::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #ffa500, #ffd700);
 }
+
 .veiculo-card {
   background: linear-gradient(145deg, #222, #2d2d2d);
   border-radius: 16px;
@@ -215,6 +222,7 @@
 .icon-trash {
   color: red;
 }
+
 .botao-alugar {
   background: linear-gradient(135deg, #999999, #27ae60);
   color: white;

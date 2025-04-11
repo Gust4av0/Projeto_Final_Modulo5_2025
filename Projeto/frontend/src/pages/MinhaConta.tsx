@@ -209,6 +209,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
   };
 
   return (
+    <div>
     <div className="container-minha-conta">
       <h1>Minha Conta</h1>
       <div className="container-formulario">
@@ -345,6 +346,7 @@ function MinhaConta({ user, setUser }: MinhaContaProps) {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }
