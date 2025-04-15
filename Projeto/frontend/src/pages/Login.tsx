@@ -70,7 +70,7 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
           <div className="input-group">
             <input
               type="text"
-              placeholder="E-mail ou CPF"
+              placeholder="E-mail"
               value={emailOuCpf}
               onChange={(e) => setEmailOuCpf(e.target.value)}
               className="input-grande"
@@ -101,7 +101,7 @@ function Login({ setUser }: { setUser: (user: UserType) => void }) {
             className="login-button pequeno"
             disabled={loading}
           >
-            {!loading ? "entrar" : "carregando"}
+            {!loading ? "Entrar" : "Carregando"}
           </button>
         </form>
 
