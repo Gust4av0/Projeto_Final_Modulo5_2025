@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { FiHome, FiUsers, FiKey, FiLayers, FiUser } from "react-icons/fi";
+import { FiHome, FiKey, FiLayers, FiUser } from "react-icons/fi";
 import "../styles/Sidebar.css";
 import { FaCarRear } from "react-icons/fa6";
 import { FaSignOutAlt } from "react-icons/fa";

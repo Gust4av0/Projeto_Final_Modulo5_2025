@@ -7,6 +7,9 @@ import locadoraRota from "./routes/locadorasRota";
 import loginRota from "./routes/loginRoutes";
 import veiculosRota from "./routes/veiculosRota";
 import aluguelRota from "./routes/aluguelRota";
+import dotenv from "dotenv";
+dotenv.config();
+
 
 const app = express();
 app.use(cors());

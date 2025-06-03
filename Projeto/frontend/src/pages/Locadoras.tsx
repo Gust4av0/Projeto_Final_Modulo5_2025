@@ -14,7 +14,7 @@ export interface Locadora {
 
 const Locadoras = () => {
   const [locadoras, setLocadoras] = useState<Locadora[]>([]);
-  const [formData, setFormData] = useState({
+  const [formData] = useState({
     nome: "",
     cidade: "",
     estado: "",
@@ -41,9 +41,6 @@ const Locadoras = () => {
     obterLocadoras();
   }, [obterLocadoras]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const deletarLocadora = async (id: number) => {
     const resultado = await Swal.fire({
@@ -78,9 +75,6 @@ const Locadoras = () => {
     }
   };
 
-  const limparFiltros = () => {
-    setFormData({ nome: "", cidade: "", estado: "" });
-  };
 
   return (
     <div className="locadoras-container">

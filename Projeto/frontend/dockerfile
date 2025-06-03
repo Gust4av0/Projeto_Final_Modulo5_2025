@@ -1,0 +1,34 @@
+# Estágio de build
+FROM node:18-alpine AS build
+
+WORKDIR /app
+
+# Copiar arquivos de configuração de pacotes
+COPY package*.json ./
+
+# Instalar dependências
+RUN npm ci
+
+# Copiar o código-fonte
+COPY . .
+
+# Definir a variável de ambiente para o build
+ENV VITE_API_URL=/api/
+
+# Buildar o aplicativo
+RUN npm run build
+
+# Estágio de produção - usar node para servir os arquivos estáticos
+FROM nginx:alpine
+
+# Remover a configuração padrão do Nginx
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copiar o build do estágio anterior para o diretório do Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expor a porta 80
+EXPOSE 80
+
+# Comando para iniciar o servidor Nginx
+CMD ["nginx", "-g", "daemon off;"]

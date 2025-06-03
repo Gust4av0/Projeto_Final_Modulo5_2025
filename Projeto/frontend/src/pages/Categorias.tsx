@@ -12,7 +12,7 @@ export interface Categoria {
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [filtroNome, setFiltroNome] = useState("");
+  const [filtroNome] = useState("");
   const [categoriaEditando, setCategoriaEditando] = useState<Categoria | null>(
     null
   );
@@ -56,10 +56,6 @@ const Categorias = () => {
     } catch {
       Swal.fire("Erro", "Erro ao excluir categoria!", "error");
     }
-  };
-
-  const limparFiltros = () => {
-    setFiltroNome("");
   };
 
   return (

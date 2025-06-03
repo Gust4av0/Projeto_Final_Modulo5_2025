@@ -1,0 +1,65 @@
+services:
+  mysql:
+    image: mysql:8.0.42
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: sua_senha_forte_aqui # **Mude esta senha!**
+      MYSQL_DATABASE: aluga_ai_ze
+      MYSQL_USER: gustavo
+      MYSQL_PASSWORD: senha_do_gustavo
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    volumes:
+      - mysql-data:/var/lib/mysql # CORRIGIDO: Nome do volume consistente
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-container
+    expose: # Usa expose pois o Nginx fará o proxy
+      - "3000"
+    environment: # É fundamental que seu backend use essas variáveis para conectar ao DB
+      DB_HOST: mysql # Nome do serviço MySQL
+      DB_NAME: aluga_ai_ze
+      DB_USER: gustavo
+      DB_PASSWORD: senha_do_gustavo
+    depends_on:
+      - mysql # Backend depende do MySQL
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    expose: # Usa expose pois o Nginx fará o proxy
+      - "3000"
+    # O frontend não depende do MySQL diretamente.
+    # Ele deve consumir a API do backend, então a dependência é do backend.
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-container
+    ports:
+      - "80:80" # ALTERADO: Normalmente Nginx escuta na porta 80. Se quiser 8080, mantenha "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend # Nginx precisa que o backend esteja rodando
+      - frontend # Nginx precisa que o frontend esteja rodando
+    networks:
+      - app-network
+
+volumes:
+  mysql-data: # CORRIGIDO: Nome do volume consistente com o serviço MySQL
+
+networks:
+  app-network:
