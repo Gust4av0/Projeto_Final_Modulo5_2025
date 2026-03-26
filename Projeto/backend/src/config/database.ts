@@ -1,14 +1,35 @@
 import { Sequelize } from "sequelize";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// Validação básica (evita rodar sem .env)
+if (!process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_HOST) {
+  throw new Error("❌ Variáveis de ambiente do banco não definidas!");
+}
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME || "aluga_ai_ze",
-  process.env.DB_USER || "root",
-  process.env.DB_PASSWORD || "",
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: process.env.DB_HOST || "localhost",  // Certifique-se de que 'database' está correto em Docker Compose
+    host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 3306,
     dialect: "mysql",
-    logging: false, // Opcional, mas útil para evitar logs excessivos no console
+
+    logging: false,
+
+    dialectOptions: {
+      // necessário em alguns ambientes cloud
+      connectTimeout: 60000,
+    },
+
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
   }
 );
 
